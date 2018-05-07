@@ -16,7 +16,7 @@ P1OUT = 0x01;
 initTimerWakeUp(clockSelect);
 // initPortInterruptWakeUp();
 while(1) {
-    __bis_SR_register(LPM0_bits + GIE);
+    __bis_SR_register(LPM3_bits + GIE);
     P1OUT ^= 0x01; // Toggle LED
     }
 }
