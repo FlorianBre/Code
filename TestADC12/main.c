@@ -9,10 +9,12 @@ void main( )
   WDTCTL = WDTPW + WDTHOLD;      // Stop WDT
   initADC();
   ADC12CTL0 |= ADC12ENC; // Enable conversion
-  doConversionPolling( );
+  while(1){
+  // doConversionPolling( );
   doConversionInterrupt( );
+  _no_operation();
 }
-
+}
 void doConversionPolling( ) {
     ADC12CTL0 &= ~ADC12SC;      // Clear the start bit (precautionary)
     ADC12CTL0 |= ADC12SC;       // Start the conversion
@@ -32,8 +34,8 @@ void doConversionInterrupt(){
 void initADC() {
     ADC12CTL0 = ADC12SHT0_4 + ADC12ON; // Select 64 ADC cykles as SHT, Turn ADC on
     ADC12CTL1 = ADC12SHP;  // select pulse sample mode.
-    REFCTL0 = REFON +  REFVSEL_0;           // Turn on internal Reference Generator, internal ref = 1.2 V
-    ADC12MCTL0 = ADC12VRSEL_1 + ADC12INCH_1; // Set Upper Reference voltage to internal Ref Voltage, Select Channel A1 for ADC
+    REFCTL0 = REFON +  REFVSEL_2;           // Turn on internal Reference Generator, internal ref = 2 V
+    ADC12MCTL0 = ADC12VRSEL_1 + ADC12INCH_4; // Set Upper Reference voltage to internal Ref Voltage, Select Channel A4 (8.7) for ADC
     __delay_cycles(100);                    // delay to allow Ref to settle
 }
 
