@@ -64,21 +64,25 @@ void initADC() {
   * ADC12MCTL0 = 0x0080 = VR+ = VREF buffered, VR- = AVSS
   *
   * Differential Mode: ADC
+  * Differential Mode On  ADC12MCTL0 = 0x2000
   *
   * Internal Ref on: REFCTL0 = 0x0001
   * Select internal Ref:
   * REFCTL0 = 0x0000 1,2 V, REFCTL0 = 0x0010 2 V REFCTL0 = 0x0020 2,5 V
   *
   */
-void initADCCOnfig( int channel, int selectReferenceVoltage, int internalReferenceVoltage, int internalRefOn int sampleHoldTime, int clockSource, int differentialMode){
+void initADCConfig(int channel, int selectReferenceVoltage, int internalReferenceVoltage, int internalRefOn, int sampleHoldTime, int clockSource, int differentialMode){
     ADC12CTL0 = ADC12ON | sampleHoldTime; // Turn ADC on, Select sample and Hold time
     ADC12CTL1 = ADC12SHP | clockSource ;  // select pulse sample mode, select the clockSource
-    ADC12MCTL0 = channel | selectReferenceVoltage ;  // Set Upper Reference voltage to internal Ref Voltage, Select Channel for ADC
+    ADC12MCTL0 = channel | selectReferenceVoltage | differentialMode;  // Set Upper Reference voltage to internal Ref Voltage, Select Channel for ADC
     REFCTL0  = internalRefOn | internalReferenceVoltage;
     // delay to allow Ref to settle
     while(~REFGENRDY){
 
     }
+}
+void selectADCchannel(int channel){
+    ADC12MCTL0 |= channel;
 }
 
 #pragma vector=ADC12_VECTOR
