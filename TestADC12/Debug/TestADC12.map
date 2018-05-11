@@ -1,10 +1,10 @@
 ******************************************************************************
                   MSP430 Linker PC v18.1.1                     
 ******************************************************************************
->> Linked Fri May 11 11:14:14 2018
+>> Linked Fri May 11 15:57:49 2018
 
 OUTPUT FILE NAME:   <TestADC12.out>
-ENTRY POINT SYMBOL: "_c_int00_noargs_mpu"  address: 00004400
+ENTRY POINT SYMBOL: "_c_int00_noargs_mpu"  address: 00004426
 
 
 MEMORY CONFIGURATION
@@ -19,7 +19,7 @@ MEMORY CONFIGURATION
   INFOB                 00001900   00000080  00000000  00000080  RWIX
   INFOA                 00001980   00000080  00000000  00000080  RWIX
   RAM                   00001c00   00000800  000000a2  0000075e  RWIX
-  FRAM                  00004400   0000bb80  00000052  0000bb2e  RWIX
+  FRAM                  00004400   0000bb80  00000060  0000bb20  RWIX
   JTAGSIGNATURE         0000ff80   00000004  00000004  00000000  RWIX  ffff 
   BSLSIGNATURE          0000ff84   00000004  00000004  00000000  RWIX  ffff 
   IPESIGNATURE          0000ff88   00000008  00000008  00000000  RWIX  ffff 
@@ -79,7 +79,7 @@ MEMORY CONFIGURATION
   INT53                 0000fffa   00000002  00000002  00000000  RWIX
   INT54                 0000fffc   00000002  00000002  00000000  RWIX
   RESET                 0000fffe   00000002  00000002  00000000  RWIX
-  FRAM2                 00010000   00014000  00000106  00013efa  RWIX
+  FRAM2                 00010000   00014000  00000112  00013eee  RWIX
 
 
 SECTION ALLOCATION MAP
@@ -108,10 +108,10 @@ section   page    origin      length       input sections
 .ipe_vars 
 *          0    00004400    00000000     UNINITIALIZED
 
-.cinit     0    00004440    00000012     
-                  00004440    00000006     (.cinit..bss.load) [load image, compression = zero_init]
-                  00004446    00000004     (__TI_handler_table)
-                  0000444a    00000008     (__TI_cinit_table)
+.cinit     0    0000444e    00000012     
+                  0000444e    00000006     (.cinit..bss.load) [load image, compression = zero_init]
+                  00004454    00000004     (__TI_handler_table)
+                  00004458    00000008     (__TI_cinit_table)
 
 .binit     0    00004400    00000000     
 
@@ -119,10 +119,10 @@ section   page    origin      length       input sections
 *          0    00004400    00000000     UNINITIALIZED
 
 .text:_isr 
-*          0    00004400    00000040     
-                  00004400    00000020     rts430x_lc_rd_eabi.lib : boot.c.obj (.text:_isr:_c_int00_noargs_mpu)
-                  00004420    00000018     main.obj (.text:_isr:ADC12_ISR)
-                  00004438    00000008     rts430x_lc_rd_eabi.lib : isr_trap.asm.obj (.text:_isr:__TI_ISR_TRAP)
+*          0    00004400    0000004e     
+                  00004400    00000026     main.obj (.text:_isr:ADC12_ISR)
+                  00004426    00000020     rts430x_lc_rd_eabi.lib : boot.c.obj (.text:_isr:_c_int00_noargs_mpu)
+                  00004446    00000008                            : isr_trap.asm.obj (.text:_isr:__TI_ISR_TRAP)
 
 .bss       0    00001c00    00000002     UNINITIALIZED
                   00001c00    00000002     (.common:testValue)
@@ -237,25 +237,25 @@ SYSNMI     0    0000fffc    00000002
 .reset     0    0000fffe    00000002     
                   0000fffe    00000002     rts430x_lc_rd_eabi.lib : boot.c.obj (.reset)
 
-.text      0    00010000    00000106     
+.text      0    00010000    00000112     
                   00010000    00000054     rts430x_lc_rd_eabi.lib : autoinit.c.obj (.text:__TI_auto_init_nobinit_nopinit_hold_wdt:__TI_auto_init_nobinit_nopinit_hold_wdt)
-                  00010054    0000002c     MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : mpu_init.o (.text:__mpu_init)
-                  00010080    00000024     rts430x_lc_rd_eabi.lib : copy_zero_init.c.obj (.text:decompress:ZI:__TI_zero_init_nomemset:__TI_zero_init_nomemset)
-                  000100a4    00000020     main.obj (.text:initADCDifferential)
-                  000100c4    0000001e     main.obj (.text:doConversionPolling)
-                  000100e2    00000018     main.obj (.text:main)
-                  000100fa    00000006     rts430x_lc_rd_eabi.lib : exit.c.obj (.text:abort)
-                  00010100    00000004                            : pre_init.c.obj (.text:_system_pre_init)
-                  00010104    00000002                            : startup.c.obj (.text:_system_post_cinit)
+                  00010054    0000002e     main.obj (.text:main)
+                  00010082    0000002c     MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : mpu_init.o (.text:__mpu_init)
+                  000100ae    00000024     rts430x_lc_rd_eabi.lib : copy_zero_init.c.obj (.text:decompress:ZI:__TI_zero_init_nomemset:__TI_zero_init_nomemset)
+                  000100d2    0000001c     main.obj (.text:doConversionPolling)
+                  000100ee    00000018     main.obj (.text:initADCDifferential)
+                  00010106    00000006     rts430x_lc_rd_eabi.lib : exit.c.obj (.text:abort)
+                  0001010c    00000004                            : pre_init.c.obj (.text:_system_pre_init)
+                  00010110    00000002                            : startup.c.obj (.text:_system_post_cinit)
 
 MODULE SUMMARY
 
        Module                 code   ro data   rw data
        ------                 ----   -------   -------
     .\
-       main.obj               110    2         2      
+       main.obj               136    2         2      
     +--+----------------------+------+---------+---------+
-       Total:                 110    2         2      
+       Total:                 136    2         2      
                                                       
     C:\ti\ccsv7\ccs_base\msp430\lib\FR59xx\MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib
        mpu_init.o             44     0         0      
@@ -303,18 +303,18 @@ MODULE SUMMARY
        Stack:                 0      0         160    
        Linker Generated:      0      18        0      
     +--+----------------------+------+---------+---------+
-       Grand Total:           326    76        162    
+       Grand Total:           352    76        162    
 
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 0000444a records: 1, size/record: 8, table size: 8
-	.bss: load addr=00004440, load size=00000006 bytes, run addr=00001c00, run size=00000002 bytes, compression=zero_init
+__TI_cinit_table @ 00004458 records: 1, size/record: 8, table size: 8
+	.bss: load addr=0000444e, load size=00000006 bytes, run addr=00001c00, run size=00000002 bytes, compression=zero_init
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 00004446 records: 1, size/record: 4, table size: 4
+__TI_handler_table @ 00004454 records: 1, size/record: 4, table size: 4
 	index: 0, handler: __TI_zero_init
 
 
@@ -553,7 +553,7 @@ address   name
 00000872  ADC12MEM9                              
 00000873  ADC12MEM9_H                            
 00000872  ADC12MEM9_L                            
-00004420  ADC12_ISR                              
+00004400  ADC12_ISR                              
 000009c0  AESACTL0                               
 000009c1  AESACTL0_H                             
 000009c0  AESACTL0_L                             
@@ -580,7 +580,7 @@ address   name
 000009ce  AESAXIN_L                              
 000004be  BCD2BIN                                
 000004bc  BIN2BCD                                
-000100fa  C$$EXIT                                
+00010106  C$$EXIT                                
 0000043e  CAPTIO0CTL                             
 0000043f  CAPTIO0CTL_H                           
 0000043e  CAPTIO0CTL_L                           
@@ -1720,11 +1720,11 @@ address   name
 0000015c  WDTCTL_L                               
 00002400  __STACK_END                            
 000000a0  __STACK_SIZE                           
-0000444a  __TI_CINIT_Base                        
-00004452  __TI_CINIT_Limit                       
-00004446  __TI_Handler_Table_Base                
-0000444a  __TI_Handler_Table_Limit               
-00004438  __TI_ISR_TRAP                          
+00004458  __TI_CINIT_Base                        
+00004460  __TI_CINIT_Limit                       
+00004454  __TI_Handler_Table_Base                
+00004458  __TI_Handler_Table_Limit               
+00004446  __TI_ISR_TRAP                          
 00010000  __TI_auto_init_nobinit_nopinit_hold_wdt
 0000ffc6  __TI_int27                             
 0000ffc8  __TI_int28                             
@@ -1757,23 +1757,23 @@ address   name
 ffffffff  __TI_pprof_out_hndl                    
 ffffffff  __TI_prof_data_size                    
 ffffffff  __TI_prof_data_start                   
-00010080  __TI_zero_init_nomemset                
+000100ae  __TI_zero_init_nomemset                
 ffffffff  __c_args__                             
 00000001  __mpu_enable                           
-00010054  __mpu_init                             
-00004400  _c_int00_noargs_mpu                    
+00010082  __mpu_init                             
+00004426  _c_int00_noargs_mpu                    
 0000fffe  _reset_vector                          
 00002360  _stack                                 
-00010104  _system_post_cinit                     
-00010100  _system_pre_init                       
-000100fa  abort                                  
-000100c4  doConversionPolling                    
+00010110  _system_post_cinit                     
+0001010c  _system_pre_init                       
+00010106  abort                                  
+000100d2  doConversionPolling                    
 00004400  fram_ipe_end                           
 00004400  fram_ipe_start                         
 00004400  fram_rw_start                          
 00004400  fram_rx_start                          
-000100a4  initADCDifferential                    
-000100e2  main                                   
+000100ee  initADCDifferential                    
+00010054  main                                   
 0000a501  mpu_ctl0_value                         
 00001513  mpu_sam_value                          
 00000440  mpu_segment_border1                    
@@ -3187,17 +3187,17 @@ address   name
 00001c00  testValue                              
 00002360  _stack                                 
 00002400  __STACK_END                            
-00004400  _c_int00_noargs_mpu                    
+00004400  ADC12_ISR                              
 00004400  fram_ipe_end                           
 00004400  fram_ipe_start                         
 00004400  fram_rw_start                          
 00004400  fram_rx_start                          
-00004420  ADC12_ISR                              
-00004438  __TI_ISR_TRAP                          
-00004446  __TI_Handler_Table_Base                
-0000444a  __TI_CINIT_Base                        
-0000444a  __TI_Handler_Table_Limit               
-00004452  __TI_CINIT_Limit                       
+00004426  _c_int00_noargs_mpu                    
+00004446  __TI_ISR_TRAP                          
+00004454  __TI_Handler_Table_Base                
+00004458  __TI_CINIT_Base                        
+00004458  __TI_Handler_Table_Limit               
+00004460  __TI_CINIT_Limit                       
 0000a501  mpu_ctl0_value                         
 0000ffc6  __TI_int27                             
 0000ffc8  __TI_int28                             
@@ -3229,15 +3229,15 @@ address   name
 0000fffc  __TI_int54                             
 0000fffe  _reset_vector                          
 00010000  __TI_auto_init_nobinit_nopinit_hold_wdt
-00010054  __mpu_init                             
-00010080  __TI_zero_init_nomemset                
-000100a4  initADCDifferential                    
-000100c4  doConversionPolling                    
-000100e2  main                                   
-000100fa  C$$EXIT                                
-000100fa  abort                                  
-00010100  _system_pre_init                       
-00010104  _system_post_cinit                     
+00010054  main                                   
+00010082  __mpu_init                             
+000100ae  __TI_zero_init_nomemset                
+000100d2  doConversionPolling                    
+000100ee  initADCDifferential                    
+00010106  C$$EXIT                                
+00010106  abort                                  
+0001010c  _system_pre_init                       
+00010110  _system_post_cinit                     
 ffffffff  __TI_pprof_out_hndl                    
 ffffffff  __TI_prof_data_size                    
 ffffffff  __TI_prof_data_start                   
