@@ -13,12 +13,12 @@ void main( )
   CSCTL2 = 0x0100; // Select VLOCLK as source for ACLK
   PM5CTL0 =  0;
   WDTCTL = WDTPW + WDTHOLD;      // Stop WDT
-  //initADC();
-  initADCDifferential( );
+  initADC();
+  //initADCDifferential( );
   ADC12CTL0 |= ADC12ENC; // Enable conversion
   while(1){
-  doConversionPolling( );
- // doConversionInterrupt( );
+ //doConversionPolling( );
+ doConversionInterrupt( );
   _no_operation();
 }
 }
@@ -28,6 +28,7 @@ void doConversionPolling( ) {
     // Poll busy bit waiting for conversion to complete
     while (ADC12CTL1 & ADC12BUSY) { }
     testValue = ADC12MEM0 & 0x0FFF;      // Read in lower 12 bits.
+    _no_operation();
 }
 
 void doConversionInterrupt(){
@@ -106,6 +107,7 @@ void selectADCchannel(int channel){
 __interrupt void ADC12_ISR(void)
 {
     testValue = ADC12MEM0 & 0x0FFF;      // Read in lower 12 bits.
+
     _BIC_SR(LPM3_EXIT);
       __bic_SR_register_on_exit(LPM0_bits+GIE); // Clear LPM bits upon ISR Exit
 }
