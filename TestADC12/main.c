@@ -1,6 +1,6 @@
 #include <msp430fr6989.h>
 unsigned int testValue;
-int i = 0;
+unsigned long i = 0;
 void initADC( );
 void initADCDifferential( );
 void initADCConfig( int, int, int, int, int, int, int);
@@ -8,19 +8,21 @@ void doConversionPolling( );
 void doConversionInterrupt( );
 void main( )
 {
+    __enable_interrupt();
+  PM5CTL0 =  0;
   FRCTL0 = FWPW | NWAITS_0; // Defines number of waitstates.
   CSCTL0 = CSKEY;
-  CSCTL2 = 0x0100; // Select VLOCLK as source for ACLK
-  PM5CTL0 =  0;
+  CSCTL2 = 0x0100 | 0x0003 ; // Select VLOCLK as source for ACLK, select DCOCLK as MCLKLK
   WDTCTL = WDTPW + WDTHOLD;      // Stop WDT
   initADC();
   //initADCDifferential( );
   ADC12CTL0 |= ADC12ENC; // Enable conversion
   while(1){
- //doConversionPolling( );
- doConversionInterrupt( );
-  _no_operation();
-}
+  i++;
+  //doConversionPolling( );
+  doConversionInterrupt( );
+  }
+
 }
 void doConversionPolling( ) {
     ADC12CTL0 &= ~ADC12SC;      // Clear the start bit (precautionary)
@@ -28,7 +30,6 @@ void doConversionPolling( ) {
     // Poll busy bit waiting for conversion to complete
     while (ADC12CTL1 & ADC12BUSY) { }
     testValue = ADC12MEM0 & 0x0FFF;      // Read in lower 12 bits.
-    _no_operation();
 }
 
 void doConversionInterrupt(){
@@ -39,8 +40,8 @@ void doConversionInterrupt(){
 
 void initADC() {
     ADC12IER0 |= ADC12IE0;   // Enable ADC conv complete interrupt
-    ADC12CTL1 = ADC12SHP;  // select pulse sample mode.
-    ADC12CTL0 |= ADC12SHT0_7 | ADC12ON; // Select 64 ADC cykles as SHT, Turn ADC on
+    ADC12CTL1 = ADC12SHP | ADC12SSEL1;  // select pulse sample mode, Set Predivider to 64 cyclse, set clock too aclk
+    ADC12CTL0 |= ADC12SHT0_4 | ADC12ON; // Select 512 ADC cykles as SHT, Turn ADC on
     ADC12MCTL0 |= ADC12VRSEL_1 | ADC12INCH_4; // Set Upper Reference voltage to internal Ref Voltage, Select Channel A4 (8.7) for ADC
     REFCTL0 |= REFON | REFVSEL_2;           // Turn on internal Reference Generator, internal ref = 2 V
     while( REFCTL0 & REFGENBUSY){ // Wait for refernce to settle
@@ -48,9 +49,9 @@ void initADC() {
 }
 
 void initADCDifferential() {
-    ADC12IER0 = ADC12IE0;                  // Enable ADC conv complete interrupt
-    ADC12CTL0 = ADC12SHT0_7 + ADC12ON; // Select 64 ADC cykles as SHT, Turn ADC on
-    ADC12CTL1 = ADC12SHP;  // select pulse sample mode.
+    ADC12IER0 = ADC12IE0;               // Enable ADC conv complete interrupt
+    ADC12CTL0 = ADC12SHT0_7 + ADC12ON;  // Select 64 ADC cykles as SHT, Turn ADC on
+    ADC12CTL1 = ADC12SHP;               // select pulse sample mode.
     ADC12MCTL0 |= ADC12INCH_4 | ADC12DIF ; // Set Upper Reference voltage to internal Ref Voltage, Select Channel A4 (8.7) and A5 (8.6) for ADC
 
 }
@@ -107,7 +108,6 @@ void selectADCchannel(int channel){
 __interrupt void ADC12_ISR(void)
 {
     testValue = ADC12MEM0 & 0x0FFF;      // Read in lower 12 bits.
-
     _BIC_SR(LPM3_EXIT);
       __bic_SR_register_on_exit(LPM0_bits+GIE); // Clear LPM bits upon ISR Exit
 }
