@@ -18,15 +18,15 @@ void main( )
   //CSCTL2 = 0x0100;
   CSCTL2 = 0x0100 | 0x0003 ; // Select VLOCLK as source for ACLK, select DCOCLK as MCLKLK
   WDTCTL = WDTPW + WDTHOLD;      // Stop WDT
-  initADC();
-  //initADCDifferential( );
+  //initADC();
+  initADCDifferential( );
   loopConversion();
 }
 
 void loopConversion(){
-    while(1){
-    doConversionPolling( );
-    //doConversionInterrupt( );
+    while(i < 1000){
+    //doConversionPolling( );
+    doConversionInterrupt( );
     i++;
     }
 }
@@ -49,17 +49,18 @@ void initADC() {
     ADC12IER0 |= ADC12IE0;   // Enable ADC conv complete interrupt
     ADC12CTL1 = ADC12SHP | ADC12SSEL0;  // select pulse sample mode, set clock to aclk.
     ADC12CTL0 |= ADC12SHT0_1 | ADC12ON; // Select 512 ADC cykles as SHT, Turn ADC on, Enable ADC
-    ADC12MCTL0 |= ADC12VRSEL_1 | ADC12INCH_4; // Set Upper Reference voltage to internal Ref Voltage, Select Channel A4 (8.7) for ADC
-    REFCTL0 |= REFON | REFVSEL_2;           // Turn on internal Reference Generator, internal ref = 2 V
-    while( REFCTL0 & REFGENBUSY){ // Wait for refernce to settle
-    }
+   // ADC12MCTL0 |= ADC12INCH_4;
+      ADC12MCTL0 |= ADC12VRSEL_1 | ADC12INCH_4; // Set Upper Reference voltage to internal Ref Voltage, Select Channel A4 (8.7) for ADC
+      REFCTL0 |= REFON | REFVSEL_2;           // Turn on internal Reference Generator, internal ref = 2 V
+      while( REFCTL0 & REFGENBUSY){ // Wait for refernce to settle
+      }
 }
 
 void initADCDifferential() {
     ADC12IER0 = ADC12IE0;               // Enable ADC conv complete interrupt
-    ADC12CTL0 = ADC12SHT0_7 | ADC12ON;  // Select 64 ADC cykles as SHT, Turn ADC on
+    ADC12CTL0 = ADC12SHT0_1 | ADC12ON;  // Select 64 ADC cykles as SHT, Turn ADC on
     ADC12CTL1 = ADC12SHP | ADC12SSEL0;               // select pulse sample mode, set clock to aclk
-    ADC12MCTL0 |= ADC12INCH_4 | ADC12DIF ; // Set Upper Reference voltage to internal Ref Voltage, Select Channel A4 (8.7) and A5 (8.6) for ADC
+    ADC12MCTL0 |= ADC12INCH_4 | ADC12DIF ; // Select Channel A4 (8.7) and A5 (8.6) for ADC, select Differential Mode
 
 }
 
