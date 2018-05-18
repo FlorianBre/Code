@@ -57,8 +57,8 @@ void initADC() {
 
 void initADCDifferential() {
     ADC12IER0 = ADC12IE0;               // Enable ADC conv complete interrupt
-    ADC12CTL0 = ADC12SHT0_7 | ADC12ON | ADC12ENC;  // Select 64 ADC cykles as SHT, Turn ADC on, ENable ADC
-    ADC12CTL1 = ADC12SHP;               // select pulse sample mode.
+    ADC12CTL0 = ADC12SHT0_7 | ADC12ON;  // Select 64 ADC cykles as SHT, Turn ADC on
+    ADC12CTL1 = ADC12SHP | ADC12SSEL0;               // select pulse sample mode, set clock to aclk
     ADC12MCTL0 |= ADC12INCH_4 | ADC12DIF ; // Set Upper Reference voltage to internal Ref Voltage, Select Channel A4 (8.7) and A5 (8.6) for ADC
 
 }
@@ -124,4 +124,3 @@ void initTimer( ){
     TA0CTL = TACLR;
     TA0CTL = TASSEL_1 |  MC_2 ; // Select ACLK as timer clock source, Up mode, TB start.
 }
-
