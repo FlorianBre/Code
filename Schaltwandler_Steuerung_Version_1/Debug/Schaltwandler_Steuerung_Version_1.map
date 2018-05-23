@@ -1,7 +1,7 @@
 ******************************************************************************
                   MSP430 Linker PC v18.1.1                     
 ******************************************************************************
->> Linked Wed May 23 15:22:29 2018
+>> Linked Wed May 23 16:29:47 2018
 
 OUTPUT FILE NAME:   <Schaltwandler_Steuerung_Version_1.out>
 ENTRY POINT SYMBOL: "_c_int00_noinit_noargs_mpu"  address: 00004400
@@ -79,7 +79,7 @@ MEMORY CONFIGURATION
   INT53                 0000fffa   00000002  00000002  00000000  RWIX
   INT54                 0000fffc   00000002  00000002  00000000  RWIX
   RESET                 0000fffe   00000002  00000002  00000000  RWIX
-  FRAM2                 00010000   00014000  00000064  00013f9c  RWIX
+  FRAM2                 00010000   00014000  00000042  00013fbe  RWIX
 
 
 SECTION ALLOCATION MAP
@@ -230,27 +230,20 @@ SYSNMI     0    0000fffc    00000002
 .reset     0    0000fffe    00000002     
                   0000fffe    00000002     rts430x_lc_rd_eabi.lib : boot.c.obj (.reset)
 
-.text      0    00010000    00000064     
+.text      0    00010000    00000042     
                   00010000    0000002c     MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : mpu_init.o (.text:__mpu_init)
-                  0001002c    00000024     main.obj (.text:main)
-                  00010050    00000006     rts430x_lc_rd_eabi.lib : exit.c.obj (.text:abort)
-                  00010056    00000006     setDutyCycle.obj (.text:setDutyCycle)
-                  0001005c    00000004     rts430x_lc_rd_eabi.lib : pre_init.c.obj (.text:_system_pre_init)
-                  00010060    00000004     setDutyCycle.obj (.text:calculatePeriod)
+                  0001002c    0000000c     main.obj (.text:main)
+                  00010038    00000006     rts430x_lc_rd_eabi.lib : exit.c.obj (.text:abort)
+                  0001003e    00000004                            : pre_init.c.obj (.text:_system_pre_init)
 
 MODULE SUMMARY
 
        Module             code   ro data   rw data
        ------             ----   -------   -------
     .\
-       main.obj           36     0         0      
+       main.obj           12     0         0      
     +--+------------------+------+---------+---------+
-       Total:             36     0         0      
-                                                  
-    .\lib\
-       setDutyCycle.obj   10     0         0      
-    +--+------------------+------+---------+---------+
-       Total:             10     0         0      
+       Total:             12     0         0      
                                                   
     C:\ti\ccsv7\ccs_base\msp430\lib\FR59xx\MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib
        mpu_init.o         44     0         0      
@@ -295,7 +288,7 @@ MODULE SUMMARY
                                                   
        Stack:             0      0         160    
     +--+------------------+------+---------+---------+
-       Grand Total:       132    58        160    
+       Grand Total:       98     58        160    
 
 
 GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
@@ -559,7 +552,7 @@ address   name
 000009ce  AESAXIN_L                 
 000004be  BCD2BIN                   
 000004bc  BIN2BCD                   
-00010050  C$$EXIT                   
+00010038  C$$EXIT                   
 0000043e  CAPTIO0CTL                
 0000043f  CAPTIO0CTL_H              
 0000043e  CAPTIO0CTL_L              
@@ -1737,8 +1730,8 @@ ffffffff  __c_args__
 00004400  _c_int00_noinit_noargs_mpu
 0000fffe  _reset_vector             
 00002360  _stack                    
-0001005c  _system_pre_init          
-00010050  abort                     
+0001003e  _system_pre_init          
+00010038  abort                     
 00004400  fram_ipe_end              
 00004400  fram_ipe_start            
 00004400  fram_rw_start             
@@ -1748,7 +1741,6 @@ ffffffff  __c_args__
 00001513  mpu_sam_value             
 00000440  mpu_segment_border1       
 00000440  mpu_segment_border2       
-00010056  setDutyCycle              
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -3194,13 +3186,12 @@ address   name
 0000fffe  _reset_vector             
 00010000  __mpu_init                
 0001002c  main                      
-00010050  C$$EXIT                   
-00010050  abort                     
-00010056  setDutyCycle              
-0001005c  _system_pre_init          
+00010038  C$$EXIT                   
+00010038  abort                     
+0001003e  _system_pre_init          
 ffffffff  __TI_pprof_out_hndl       
 ffffffff  __TI_prof_data_size       
 ffffffff  __TI_prof_data_start      
 ffffffff  __c_args__                
 
-[1447 symbols]
+[1446 symbols]

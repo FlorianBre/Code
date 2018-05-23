@@ -1,5 +1,7 @@
+#include "lib/SetDutyCycle.h"
+#include "lib/ADCMeasurement.h"
+#include "lib/CalculateEmulateResistance.h"
 #include <msp430fr6989.h>
-#include "lib/setDutyCycle.h"
 //---Module Description --------------------------------------------------
 
 /**
@@ -14,8 +16,8 @@
  */
 void main(void){
     __enable_interrupt();
-    PM5CTL0 =  0;
-    double duty = 0.5;
-    int frequency = 10000;
-    setDutyCycle(duty, frequency);
+    PM5CTL0 = 0;
+    while(1){
+     adcMeasurement();
+    }
 }
