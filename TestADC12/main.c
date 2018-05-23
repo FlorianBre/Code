@@ -1,9 +1,16 @@
 #include <msp430fr6989.h>
+#include <stdio.h>
+#include <stdlib.h>
+int numberMeasurements = 20;
 unsigned int testValue;
+unsigned int test[20];
+int abweichung = 0;
+double durchschnitt;
 unsigned long i = 0;
 unsigned long time = 0;
 void initADC( );
 void initADCDifferential( );
+void testMeasurement();
 void initADCConfig( int, int, int, int, int, int, int);
 void doConversionPolling( );
 void doConversionInterrupt( );
@@ -19,18 +26,35 @@ void main( )
   CSCTL2 = 0x0100 | 0x0003 ; // Select VLOCLK as source for ACLK, select DCOCLK as MCLKLK
   WDTCTL = WDTPW + WDTHOLD;      // Stop WDT
   initADC();
+  while(1){
+  __delay_cycles(1000);
+  testMeasurement();
+  }
   //initADCDifferential( );
-  loopConversion();
+  //loopConversion();
 }
 
 void loopConversion(){
     initTimer();
     while(i < 1000){
-    doConversionPolling( );
-    //doConversionInterrupt( );
+    // doConversionPolling( );
+    doConversionInterrupt( );
     i++;
     }
     time = TA0R;
+}
+
+void testMeasurement(){
+    for(i = 0; i < numberMeasurements; i++){
+    doConversionPolling( );
+    test[i] = ADC12MEM0 & 0x0FFF;
+    }
+    for(i = 1; i < numberMeasurements; i++){
+        abweichung += abs(test[i-1] - test[i]);
+    }
+    durchschnitt = abweichung;
+    durchschnitt /= 19.0;
+    _no_operation();
 }
 
 void doConversionPolling( ) {
@@ -51,12 +75,11 @@ void initADC() {
     ADC12IER0 |= ADC12IE0;   // Enable ADC conv complete interrupt
     ADC12CTL0 |= ADC12SHT0_1 | ADC12ON; // Select 512 ADC cykles as SHT, Turn ADC on, Enable ADC
     ADC12CTL1 |= ADC12SHP | ADC12SSEL0;  // select pulse sample mode, set clock to aclk.
-    ADC12CTL2 = ADC12PWRMD; // enable ADC Low Power Mode.
-   ADC12MCTL0 |= ADC12INCH_4;
-   //ADC12MCTL0 |= ADC12VRSEL_1 | ADC12INCH_4; // Set Upper Reference voltage to internal Ref Voltage, Select Channel A4 (8.7) for ADC
-   //REFCTL0 |= REFON | REFVSEL_2;           // Turn on internal Reference Generator, internal ref = 2 V
-    //  while( REFCTL0 & REFGENBUSY){ // Wait for refernce to settle
-    //  }
+    ADC12MCTL0 |= ADC12INCH_4;
+    ADC12MCTL0 |= ADC12VRSEL_1 | ADC12INCH_4; // Set Upper Reference voltage to internal Ref Voltage, Select Channel A4 (8.7) for ADC
+    REFCTL0 |= REFON | REFVSEL_2;           // Turn on internal Reference Generator, internal ref = 2 V
+      while( REFCTL0 & REFGENBUSY){ // Wait for refernce to settle
+      }
 }
 
 void initADCDifferential() {
