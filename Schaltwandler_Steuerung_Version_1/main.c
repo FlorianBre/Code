@@ -21,7 +21,7 @@ void main(void){
     __enable_interrupt();
     PM5CTL0 = 0;
     _no_operation();
-    timerCaptureCompare(CCIS_0, TASSEL_1);
+    timerCaptureCompareA0(CCIS_0, TASSEL_1);
     while(1){
 
     }
@@ -30,7 +30,7 @@ void main(void){
 /*
  * Timer interrupt triggered by the change form a high to a low edge on pin 1.5.
  */
-#pragma vector=TIMER0_A1_VECTOR
+#pragma vector=TIMER0_A0_VECTOR
 __interrupt void Timer_A(void)
 {
     _no_operation();
