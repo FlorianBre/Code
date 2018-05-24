@@ -1,7 +1,9 @@
-#include "lib/SetDutyCycle.h"
-#include "lib/ADCMeasurement.h"
-#include "lib/CalculateEmulateResistance.h"
+#include <lib/ADCMeasurement.h>
+#include <lib/CalculateEmulatedResistance.h>
+#include <lib/SetDutyCycle.h>
+#include <lib/Timer.h>
 #include <msp430fr6989.h>
+
 //---Module Description --------------------------------------------------
 
 /**
@@ -17,7 +19,9 @@
 void main(void){
     __enable_interrupt();
     PM5CTL0 = 0;
+    _no_operation();
+    timerCaptureCompare(CCIS_0, &TA0CTL, TASSEL_1);
     while(1){
-     adcMeasurement();
+
     }
 }
