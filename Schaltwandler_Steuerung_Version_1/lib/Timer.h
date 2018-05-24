@@ -9,7 +9,7 @@
 #define LIB_TIMER_H_
 
 void timerCounter();
-void timerCaptureCompare(int, volatile unsigned int *, int);
+void timerCaptureCompare(int, int);
 void clockSourceSelect(int);
 
 
