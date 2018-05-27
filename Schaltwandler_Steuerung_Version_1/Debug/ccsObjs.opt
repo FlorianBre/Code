@@ -1,1 +1,1 @@
-"./main.obj" "./lib/ADCMeasurement.obj" "./lib/CalculateEmulatedResistance.obj" "./lib/SetDutyCycle.obj" "./lib/Timer.obj" "../lnk_msp430fr6989.cmd" -llibmpu_init.a -llibmath.a -llibc.a 
+"./main.obj" "./lib/ADC.obj" "./lib/CalculateEmulatedResistance.obj" "./lib/SetDutyCycle.obj" "./lib/Timer.obj" "../lnk_msp430fr6989.cmd" -llibmpu_init.a -llibmath.a -llibc.a 

@@ -1,8 +1,7 @@
 # FIXED
 
 main.obj: ../main.c
-main.obj: C:/Users/Flo/Desktop/Bachelorthesis/Code/Schaltwandler_Steuerung_Version_1/lib/ADCMeasurement.h
-main.obj: C:/Users/Flo/Desktop/Bachelorthesis/Code/Schaltwandler_Steuerung_Version_1/lib/CalculateEmulatedResistance.h
+main.obj: C:/Users/Flo/Desktop/Bachelorthesis/Code/Schaltwandler_Steuerung_Version_1/lib/ADC.h
 main.obj: C:/Users/Flo/Desktop/Bachelorthesis/Code/Schaltwandler_Steuerung_Version_1/lib/SetDutyCycle.h
 main.obj: C:/Users/Flo/Desktop/Bachelorthesis/Code/Schaltwandler_Steuerung_Version_1/lib/Timer.h
 main.obj: C:/ti/ccsv7/ccs_base/msp430/include/msp430fr6989.h
@@ -11,8 +10,7 @@ main.obj: C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_18.1.1.LTS/include/intrinsics
 main.obj: C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_18.1.1.LTS/include/intrinsics_legacy_undefs.h
 
 ../main.c: 
-C:/Users/Flo/Desktop/Bachelorthesis/Code/Schaltwandler_Steuerung_Version_1/lib/ADCMeasurement.h: 
-C:/Users/Flo/Desktop/Bachelorthesis/Code/Schaltwandler_Steuerung_Version_1/lib/CalculateEmulatedResistance.h: 
+C:/Users/Flo/Desktop/Bachelorthesis/Code/Schaltwandler_Steuerung_Version_1/lib/ADC.h: 
 C:/Users/Flo/Desktop/Bachelorthesis/Code/Schaltwandler_Steuerung_Version_1/lib/SetDutyCycle.h: 
 C:/Users/Flo/Desktop/Bachelorthesis/Code/Schaltwandler_Steuerung_Version_1/lib/Timer.h: 
 C:/ti/ccsv7/ccs_base/msp430/include/msp430fr6989.h: 

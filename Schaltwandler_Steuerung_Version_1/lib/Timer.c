@@ -7,33 +7,33 @@
 #include <msp430.h>
 #include <lib/Timer.h>
 
-void timerCounterA0(selectTimerClock ){
+void timerCounterA0(int clockSelect){
     TA0CTL = TACLR;
-    TA0CTL |= TASSEL_1 |  MC_2 ;
+    TA0CTL |= clockSelect |  MC_2 ;
 }
 
-void timerCounterA1(int selectTimerClock ){
+void timerCounterA1(int clockSelect){
     TA1CTL = TACLR;
-    TA1CTL |= selectTimerClock |  MC_2 ;
+    TA1CTL |= clockSelect |  MC_2 ;
 }
 
-void timerCounterA2(int selectTimerClock ){
+void timerCounterA2(int clockSelect ){
     TA2CTL = TACLR;
-    TA2CTL |= selectTimerClock |  MC_2 ;
+    TA2CTL |= clockSelect |  MC_2 ;
 }
-void timerCounterA3(int selectTimerClock ){
+void timerCounterA3(int clockSelect ){
     TA3CTL = TACLR;
-    TA3CTL |= selectTimerClock |  MC_2 ;
+    TA3CTL |= clockSelect |  MC_2 ;
 }
-void timerCounterB0(int selectTimerClock ){
+void timerCounterB0(int clockSelect ){
     TA3CTL = TACLR;
-    TA3CTL |= selectTimerClock |  MC_2 ;
+    TA3CTL |= clockSelect |  MC_2 ;
 }
 
-void timerCaptureCompareA0(int captureCompareInput, int selectTimerClock){
+void timerCaptureCompareA0(int captureCompareInput, int clockSelect, int edgeSelect){
     TA0CTL = TACLR; // Reset Timer
-    TA0CTL = selectTimerClock |  MC_2 ; // Select ACLK as timer clock source, Up mode, TB start.
-    TA0CCTL0 |= CAP + CM_2 + captureCompareInput + SCS + CCIE; // Capturemode on/off, Capture mode neg Edge, Capture input  (P1.5), Capture synchronus mode, capture interrupt enable
+    TA0CTL = clockSelect |  MC_2 ; // Select ACLK as timer clock source, Up mode, TB start.
+    TA0CCTL0 |= CAP + edgeSelect + captureCompareInput + SCS + CCIE; // Capturemode on/off, Capture mode neg Edge, Capture input  (P1.5), Capture synchronus mode, capture interrupt enable
     // Select CCIOA (P1.5)
     if(captureCompareInput == CCIS_0 ){
         P1DIR &= ~BIT5;
@@ -49,10 +49,10 @@ void timerCaptureCompareA0(int captureCompareInput, int selectTimerClock){
         P7SEL1 &= ~BIT1;
     }
 }
-    void timerCaptureCompareA1(int captureCompareInput, int selectTimerClock){
+    void timerCaptureCompareA1(int captureCompareInput, int clockSelect, int edgeSelect){
         TA1CTL = TACLR;
-        TA1CTL = selectTimerClock |  MC_2 ;
-        TA1CCTL0 |= CAP + CM_2 + captureCompareInput + SCS + CCIE;
+        TA1CTL = clockSelect |  MC_2 ;
+        TA1CCTL0 |= CAP + edgeSelect + captureCompareInput + SCS + CCIE;
         // Select CCIOA (P1.4)
         if(captureCompareInput == CCIS_0 ){
             P1DIR &= ~BIT4;
@@ -68,10 +68,10 @@ void timerCaptureCompareA0(int captureCompareInput, int selectTimerClock){
             P5SEL1 &= ~BIT2;
         }
     }
-    void timerCaptureCompareB0(int captureCompareInput, int selectTimerClock){
+    void timerCaptureCompareB0(int captureCompareInput, int clockSelect, int edgeSelect){
             TB0CTL = TACLR;
-            TB0CTL = selectTimerClock |  MC_2 ;
-            TB0CCTL0 |= CAP + CM_2 + captureCompareInput + SCS + CCIE;
+            TB0CTL = clockSelect |  MC_2 ;
+            TB0CCTL0 |= CAP + edgeSelect + captureCompareInput + SCS + CCIE;
             // Select CCI (P3.4)
             if(captureCompareInput == CCIS_0 ){
                 P3DIR &= ~BIT4;
