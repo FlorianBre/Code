@@ -14,7 +14,7 @@
  *        differentialModeSelect: select differential or single mode (ADC12DIF),
  *        sampleHoldSelect: select Sample and Hold time (ADC12SHT0_X),
  *        refSelect: select Reference (ADC12VRSEL_X),
- *        intRefSelecet: select internal reference select,
+ *        intRefSelecet: select internal reference select (REFVSEL_X)
  *        channelSelect: select ADC channel (ADC12INCH_X)
  */
 void adcInit(int, int, int, int, int, int, int);

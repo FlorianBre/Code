@@ -7,14 +7,14 @@
 #include <lib/ADC.h>
 #include <msp430.h>
 void adcInit(int clockSelect0, int clockSelect1, int differentialModeSelect, int sampleHoldSelect, int refSelect, int intRefSelecet, int channelSelect){
-    ADC12CTL1 |= ADC12SHP | clockSelect0 | clockSelect1 ;  // select pulse sample mode, set clock to aclk.
-    ADC12IER0 |= ADC12IE0;   // Enable ADC conv complete interrupt
-    ADC12CTL0 |= sampleHoldSelect | ADC12ON; // Select 512 ADC cykles as SHT, Turn ADC on, Enable ADC
-    ADC12MCTL0 |= refSelect | channelSelect | differentialModeSelect ; // Set Upper Reference voltage to internal Ref Voltage, Select Channel A4 (8.7) for ADC
+    ADC12IER0 |= ADC12IE0;  // Enable ADC complete interrupt.
+    ADC12CTL0 |= sampleHoldSelect | ADC12ON;    // Select SHT, Turn ADC on, Enable ADC
+    ADC12CTL1 |= ADC12SHP | clockSelect0 | clockSelect1 ;   // select pulse sample mode, select clock source.
+    ADC12IER0 |= ADC12IE0;   // Enable ADC complete interrupt.
+    ADC12MCTL0 |= refSelect | channelSelect | differentialModeSelect ; // Set Upper Reference voltage to internal Ref Voltage, Select Channel
     if(refSelect == ADC12VRSEL_1) {
-        REFCTL0 |= REFON | intRefSelecet;           // Turn on internal Reference Generator, internal ref = 2 V
-        while( REFCTL0 & REFGENBUSY){ // Wait for refernce to settle
-        }
+        REFCTL0 |= REFON | intRefSelecet;   // Turn on internal Reference Generator, select Reference
+        while( REFCTL0 & REFGENBUSY){ };    // Wait for refernce to settle
     }
 }
 

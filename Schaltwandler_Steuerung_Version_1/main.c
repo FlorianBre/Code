@@ -1,5 +1,4 @@
 #include <lib/ADC.h>
-#include <lib/SetDutyCycle.h>
 #include <lib/Timer.h>
 #include <msp430fr6989.h>
 
@@ -25,7 +24,29 @@ void main(void){
     __enable_interrupt();
     PM5CTL0 = 0;
     _no_operation();
-    timerCaptureCompareA0(CCIS_0, TASSEL_1);
+    /*
+     * Counter Testing TASSEL_1 = ACLK
+     */
+    //timerCounterA0(TASSEL_1);
+    /*
+     * Capture Compare Testing
+     * TASSEL_1 = ACLK
+     * CCIS_0 = Caputer Compare input 1
+     * CM_3 = both edges
+     */
+    //timerCaptureCompareA0(CCIS_0, TASSEL_1, CM_3);
+
+    /*
+     *  ADC testing
+     *  ADC12SSEL0 = 1, ADC12SSEL1 = 0 => ADCclk = ACLK
+     *  ADC12DIF = 0 = single Mode
+     *  ADC12SHT0_1 = SHT 8 ADCCLK
+     *  ADC12VRSEL_1 = Select reference as internal
+     *  REFVSEL_2 = internal reference = 2,5 V
+     *  ADC12INCH_4 = Channel 8.7
+     */
+    adcInit(ADC12SSEL0, 0, ADC12DIF, ADC12SHT0_1 , ADC12VRSEL_1, REFVSEL_2, ADC12INCH_7);
+    __delay_cycles(10000);
     while(1){
 
     }
@@ -37,20 +58,21 @@ double CalculateDutyCycle(int vIn, int vOut, int tPeriod)
     }
 
 /*
- * Timer interrupt triggered by the change form a high to a low edge on pin 1.5.
+ * Timer ISR.
  */
-#pragma vector=TIMER0_A0_VECTOR
-__interrupt void Timer_A(void)
+
+ #pragma vector=TIMER0_A0_VECTOR
+__interrupt void TIMER0_A0(void)
 {
+    __delay_cycles(10000);
     _no_operation();
-    if(TA1IV == 4){
-        _no_operation();
-    }
+    __delay_cycles(10000);
 }
 
 #pragma vector = ADC12_VECTOR
 __interrupt void ADC12_ISR(void)
 {
+    // Memory 0 Interrupt
     if(ADC12IFG0) {
     testValue = ADC12MEM0 & 0x0FFF;      // Read in lower 12 bits.x
       __bic_SR_register_on_exit(LPM3_bits+GIE); // Clear LPM bits upon ISR Exit
