@@ -10,7 +10,8 @@
 
 /*
  * @brief Method for initialize the ADC converter.
- * @param clockSelect0: select ADC12CLK0 (ADC12SSEL0), clockSelect1: Select ADC12CLK1 (ADC12SSEL1)
+ * @param clockSelect0: select ADC12CLK0 (ADC12SSEL0),
+ *        clockSelect1: Select ADC12CLK1 (ADC12SSEL1)
  *        differentialModeSelect: select differential or single mode (ADC12DIF),
  *        sampleHoldSelect: select Sample and Hold time (ADC12SHT0_X),
  *        refSelect: select Reference (ADC12VRSEL_X),

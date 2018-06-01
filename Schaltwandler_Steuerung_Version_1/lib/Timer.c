@@ -8,6 +8,10 @@
 #include <lib/Timer.h>
 #define T_ON_A0 TA0CCR1
 #define T_PERIOD_A0 TA0CCR0
+#define T_ON_A1 TA1CCR1
+#define T_PERIOD_A1 TA1CCR0
+#define T_ON_B0 TB0CCR1
+#define T_PERIOD_B0 TB0CCR0
 
 void timerCounterA0(unsigned int clockSelect){
     TA0CTL = TACLR;
@@ -92,17 +96,43 @@ void timerCaptureCompareA0(unsigned int captureCompareInput, unsigned int clockS
 
 void timerInitPWMA0(int periodCycles, unsigned int clockSelect, double dutyCycle, unsigned int pwmOutputMode) {
         T_PERIOD_A0 = periodCycles;
-        TA1CTL |= TACLR; // Reset Timer
-        TA1CTL |= clockSelect | MC_1; // Select timer clock source,Count up to the value in TA0CCR0.
-        TA1CCTL1 |= pwmOutputMode; // Select output mode.
+        TA0CTL |= TACLR; // Reset Timer
+        TA0CTL |= clockSelect | MC_1; // Select timer clock source,Count up to the value in TA0CCR0.
+        TA0CCTL1 |= pwmOutputMode; // Select output mode.
+        P1DIR |= BIT6 | BIT0;
+        P1SEL0 |= BIT6 | BIT0;
+        P1SEL1 &= BIT0;
+        P1SEL1 |= BIT6;
         timerSetDutyCycleA0(dutyCycle);
 
     }
     void timerSetDutyCycleA0(double dutyCycle){
-        T_ON_A0 = (T_PERIOD_A0 + 1) * dutyCycle;
+        T_ON_A0 = (T_PERIOD_A0 + 1.0) * dutyCycle;
     }
 
+    void timerInitPWMA1(int periodCycles, unsigned int clockSelect, double dutyCycle, unsigned int pwmOutputMode) {
+            T_PERIOD_A1 = periodCycles;
+            TA1CTL |= TACLR; // Reset Timer
+            TA1CTL |= clockSelect | MC_1; // Select timer clock source,Count up to the value in TA1CCR0.
+            TA1CCTL1 |= pwmOutputMode; // Select output mode.
+            timerSetDutyCycleA1(dutyCycle);
 
+        }
+        void timerSetDutyCycleA1(double dutyCycle){
+            T_ON_A1 = (T_PERIOD_A1 + 1.0) * dutyCycle;
+        }
+
+        void timerInitPWMB0(int periodCycles, unsigned int clockSelect, double dutyCycle, unsigned int pwmOutputMode) {
+                T_PERIOD_B0 = periodCycles;
+                TB0CTL |= TACLR; // Reset Timer
+                TB0CTL |= clockSelect | MC_1; // Select timer clock source,Count up to the value in TB0CCR0.
+                TB0CCTL1 |= pwmOutputMode; // Select output mode.
+                timerSetDutyCycleB0(dutyCycle);
+
+            }
+            void timerSetDutyCycleB0(double dutyCycle){
+                T_ON_B0 = (T_PERIOD_B0 + 1.0) * dutyCycle;
+            }
 
 
 

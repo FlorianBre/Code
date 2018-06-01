@@ -17,7 +17,7 @@
 
 const double rIn_ohm = 2000;
 const double lCoil_H = 1;
-int testValue;
+unsigned long time;
 
 void main(void){
     WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
@@ -31,10 +31,10 @@ void main(void){
     /*
      * Capture Compare Testing
      * TASSEL_1 = ACLK
-     * CCIS_0 = Caputer Compare input 1
+     * CCIS_0 = Caputer Compare input 0
      * CM_3 = both edges
      */
-    //timerCaptureCompareA0(CCIS_0, TASSEL_1, CM_3);
+     timerCaptureCompareA0(CCIS_0, TASSEL_2, CM_1);
 
     /*
      *  ADC testing
@@ -45,11 +45,19 @@ void main(void){
      *  REFVSEL_2 = internal reference = 2,5 V
      *  ADC12INCH_4 = Channel 8.7
      */
-    adcInit(ADC12SSEL0, 0, ADC12DIF, ADC12SHT0_1 , ADC12VRSEL_1, REFVSEL_2, ADC12INCH_7);
-    __delay_cycles(10000);
-    while(1){
+     //   adcInit(0, ADC12SSEL1, 0, ADC12SHT0_0 , ADC12VRSEL_1, REFVSEL_0, ADC12INCH_14);
+    /*
+     * PWM testing
+     * Amount off period cycles
+     * TASSEL_2 = SMCLK
+     * dutyCycle
+     * OUTMOD_7 = reset/set
+     */
+    //timerInitPWMA0(30, TASSEL_2, 0.9, OUTMOD_3);
+   // displayInit();
+   // displayShow(20);
 
-    }
+
 }
 
 double CalculateDutyCycle(int vIn, int vOut, int tPeriod)
@@ -64,9 +72,8 @@ double CalculateDutyCycle(int vIn, int vOut, int tPeriod)
  #pragma vector=TIMER0_A0_VECTOR
 __interrupt void TIMER0_A0(void)
 {
-    __delay_cycles(10000);
-    _no_operation();
-    __delay_cycles(10000);
+    time = TA0R;
+    TA0CTL = TACLR | TASSEL_2 |  MC_2 ; // Reset Timer
 }
 
 #pragma vector = ADC12_VECTOR
@@ -74,7 +81,7 @@ __interrupt void ADC12_ISR(void)
 {
     // Memory 0 Interrupt
     if(ADC12IFG0) {
-    testValue = ADC12MEM0 & 0x0FFF;      // Read in lower 12 bits.x
+    // testValue = ADC12MEM0 & 0x0FFF;      // Read in lower 12 bits.x
       __bic_SR_register_on_exit(LPM3_bits+GIE); // Clear LPM bits upon ISR Exit
     }
 }

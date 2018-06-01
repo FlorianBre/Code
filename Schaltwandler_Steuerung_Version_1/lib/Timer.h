@@ -76,6 +76,13 @@ void timerInitPWMA0(int periodCycles, unsigned int clockSelect, double dutyCycle
  *        dutyCycle: Select the duty cycle.
  *        pwmOutputMode: Select the output mode. (OUTMOD_3 = set/reset, OUTMOD_7 = reset/set)
  */
+
+void timerInitPWMA1(int periodCycles, unsigned int clockSelect, double dutyCycle, unsigned int pwmOutputMode);
+void timerInitPWMB0(int periodCycles, unsigned int clockSelect, double dutyCycle, unsigned int pwmOutputMode);
+
 void timerSetDutyCycleA0(double dutyCycle);
+void timerSetDutyCycleA1(double dutyCycle);
+void timerSetDutyCycleB0(double dutyCycle);
+
 
 #endif /* LIB_TIMER_H_ */
