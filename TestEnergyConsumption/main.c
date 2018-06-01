@@ -7,9 +7,9 @@ void LowPowerMode(int);
 void main(void)
 {
 __enable_interrupt();
-PM5CTL0 =  0;
+PM5CTL0 &= ~LOCKLPM5;
+WDTCTL |= WDTPW + WDTHOLD; // Stop watchdog timer.
 FRCTL0 = FWPW | NWAITS_0; // Defines number of waitstates.
-WDTCTL = WDTPW + WDTHOLD; // Stop watchdog timer.
 //CSCTL0 = CSKEY;
 //CSCTL1 =  DCORSEL | DCOFSEL_0; // Set DCO to high speed, select  24 MHz
 //CSCTL3 = DIVM_0; // Divide MCLK by 0

@@ -96,12 +96,13 @@ void timerCaptureCompareA0(unsigned int captureCompareInput, unsigned int clockS
 
 void timerInitPWMA0(int periodCycles, unsigned int clockSelect, double dutyCycle, unsigned int pwmOutputMode) {
         T_PERIOD_A0 = periodCycles;
-        TA0CTL |= TACLR; // Reset Timer
+        TA0CTL |= TACLR; // Reset Timer.
         TA0CTL |= clockSelect | MC_1; // Select timer clock source,Count up to the value in TA0CCR0.
         TA0CCTL1 |= pwmOutputMode; // Select output mode.
+        // configure Pin Functions.
         P1DIR |= BIT6 | BIT0;
         P1SEL0 |= BIT6 | BIT0;
-        P1SEL1 &= BIT0;
+        P1SEL1 &= ~BIT0;
         P1SEL1 |= BIT6;
         timerSetDutyCycleA0(dutyCycle);
 
@@ -112,9 +113,15 @@ void timerInitPWMA0(int periodCycles, unsigned int clockSelect, double dutyCycle
 
     void timerInitPWMA1(int periodCycles, unsigned int clockSelect, double dutyCycle, unsigned int pwmOutputMode) {
             T_PERIOD_A1 = periodCycles;
-            TA1CTL |= TACLR; // Reset Timer
-            TA1CTL |= clockSelect | MC_1; // Select timer clock source,Count up to the value in TA1CCR0.
-            TA1CCTL1 |= pwmOutputMode; // Select output mode.
+            TA1CTL |= TACLR;
+            TA1CTL |= clockSelect | MC_1;
+            TA1CCTL1 |= pwmOutputMode;
+            P1DIR |= BIT2;
+            P3DIR |= BIT3;
+            P1SEL0 |= BIT2;
+            P1SEL1 &= ~BIT2;
+            P3SEL0 &= ~BIT3;
+            P3SEL1 &= ~BIT3;
             timerSetDutyCycleA1(dutyCycle);
 
         }
@@ -127,6 +134,12 @@ void timerInitPWMA0(int periodCycles, unsigned int clockSelect, double dutyCycle
                 TB0CTL |= TACLR; // Reset Timer
                 TB0CTL |= clockSelect | MC_1; // Select timer clock source,Count up to the value in TB0CCR0.
                 TB0CCTL1 |= pwmOutputMode; // Select output mode.
+                P3DIR |= BIT5;
+                P6DIR |= BIT5;
+                P3SEL0 &= ~BIT5;
+                P3SEL1 |= BIT5;
+                P6SEL0 &= ~BIT5;
+                P6SEL1 |= BIT5;
                 timerSetDutyCycleB0(dutyCycle);
 
             }

@@ -1,7 +1,7 @@
 ******************************************************************************
                   MSP430 Linker PC v18.1.1                     
 ******************************************************************************
->> Linked Wed May 30 14:33:45 2018
+>> Linked Fri Jun  1 15:24:25 2018
 
 OUTPUT FILE NAME:   <Schaltwandler_Steuerung_Version_1.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs_mpu"  address: 00004400
@@ -79,7 +79,7 @@ MEMORY CONFIGURATION
   INT53                 0000fffa   00000002  00000002  00000000  RWIX
   INT54                 0000fffc   00000002  00000002  00000000  RWIX
   RESET                 0000fffe   00000002  00000002  00000000  RWIX
-  FRAM2                 00010000   00014000  0000011c  00013ee4  RWIX
+  FRAM2                 00010000   00014000  000000c4  00013f3c  RWIX
 
 
 SECTION ALLOCATION MAP
@@ -238,29 +238,23 @@ SYSNMI     0    0000fffc    00000002
 .reset     0    0000fffe    00000002     
                   0000fffe    00000002     rts430x_lc_rd_eabi.lib : boot.c.obj (.reset)
 
-.text      0    00010000    0000011c     
+.text      0    00010000    000000c4     
                   00010000    00000054     rts430x_lc_rd_eabi.lib : autoinit.c.obj (.text:__TI_auto_init_nobinit_nopinit_hold_wdt:__TI_auto_init_nobinit_nopinit_hold_wdt)
-                  00010054    0000004a     Timer.obj (.text:timerCaptureCompareA0)
-                  0001009e    0000002c     MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : mpu_init.o (.text:__mpu_init)
-                  000100ca    00000024     rts430x_lc_rd_eabi.lib : copy_zero_init.c.obj (.text:decompress:ZI:__TI_zero_init_nomemset:__TI_zero_init_nomemset)
-                  000100ee    00000022     main.obj (.text:main)
-                  00010110    00000006     rts430x_lc_rd_eabi.lib : exit.c.obj (.text:abort)
-                  00010116    00000004                            : pre_init.c.obj (.text:_system_pre_init)
-                  0001011a    00000002                            : startup.c.obj (.text:_system_post_cinit)
+                  00010054    0000002c     MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : mpu_init.o (.text:__mpu_init)
+                  00010080    00000024     rts430x_lc_rd_eabi.lib : copy_zero_init.c.obj (.text:decompress:ZI:__TI_zero_init_nomemset:__TI_zero_init_nomemset)
+                  000100a4    00000014     main.obj (.text:main)
+                  000100b8    00000006     rts430x_lc_rd_eabi.lib : exit.c.obj (.text:abort)
+                  000100be    00000004                            : pre_init.c.obj (.text:_system_pre_init)
+                  000100c2    00000002                            : startup.c.obj (.text:_system_post_cinit)
 
 MODULE SUMMARY
 
        Module                 code   ro data   rw data
        ------                 ----   -------   -------
     .\
-       main.obj               62     4         4      
+       main.obj               48     4         4      
     +--+----------------------+------+---------+---------+
-       Total:                 62     4         4      
-                                                      
-    .\lib\
-       Timer.obj              74     0         0      
-    +--+----------------------+------+---------+---------+
-       Total:                 74     0         0      
+       Total:                 48     4         4      
                                                       
     C:\ti\ccsv7\ccs_base\msp430\lib\FR59xx\MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib
        mpu_init.o             44     0         0      
@@ -307,7 +301,7 @@ MODULE SUMMARY
        Stack:                 0      0         160    
        Linker Generated:      0      18        0      
     +--+----------------------+------+---------+---------+
-       Grand Total:           352    76        164    
+       Grand Total:           264    76        164    
 
 
 LINKER GENERATED COPY TABLES
@@ -584,7 +578,7 @@ address   name
 000009ce  AESAXIN_L                              
 000004be  BCD2BIN                                
 000004bc  BIN2BCD                                
-00010110  C$$EXIT                                
+000100b8  C$$EXIT                                
 0000043e  CAPTIO0CTL                             
 0000043f  CAPTIO0CTL_H                           
 0000043e  CAPTIO0CTL_L                           
@@ -1762,27 +1756,26 @@ address   name
 ffffffff  __TI_pprof_out_hndl                    
 ffffffff  __TI_prof_data_size                    
 ffffffff  __TI_prof_data_start                   
-000100ca  __TI_zero_init_nomemset                
+00010080  __TI_zero_init_nomemset                
 ffffffff  __c_args__                             
 00000001  __mpu_enable                           
-0001009e  __mpu_init                             
+00010054  __mpu_init                             
 00004400  _c_int00_noargs_mpu                    
 0000fffe  _reset_vector                          
 00002360  _stack                                 
-0001011a  _system_post_cinit                     
-00010116  _system_pre_init                       
-00010110  abort                                  
+000100c2  _system_post_cinit                     
+000100be  _system_pre_init                       
+000100b8  abort                                  
 00004400  fram_ipe_end                           
 00004400  fram_ipe_start                         
 00004400  fram_rw_start                          
 00004400  fram_rx_start                          
-000100ee  main                                   
+000100a4  main                                   
 0000a501  mpu_ctl0_value                         
 00001513  mpu_sam_value                          
 00000440  mpu_segment_border1                    
 00000440  mpu_segment_border2                    
 00001c00  time                                   
-00010054  timerCaptureCompareA0                  
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -3234,17 +3227,16 @@ address   name
 0000fffc  __TI_int54                             
 0000fffe  _reset_vector                          
 00010000  __TI_auto_init_nobinit_nopinit_hold_wdt
-00010054  timerCaptureCompareA0                  
-0001009e  __mpu_init                             
-000100ca  __TI_zero_init_nomemset                
-000100ee  main                                   
-00010110  C$$EXIT                                
-00010110  abort                                  
-00010116  _system_pre_init                       
-0001011a  _system_post_cinit                     
+00010054  __mpu_init                             
+00010080  __TI_zero_init_nomemset                
+000100a4  main                                   
+000100b8  C$$EXIT                                
+000100b8  abort                                  
+000100be  _system_pre_init                       
+000100c2  _system_post_cinit                     
 ffffffff  __TI_pprof_out_hndl                    
 ffffffff  __TI_prof_data_size                    
 ffffffff  __TI_prof_data_start                   
 ffffffff  __c_args__                             
 
-[1457 symbols]
+[1456 symbols]

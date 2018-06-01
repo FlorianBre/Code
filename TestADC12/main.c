@@ -20,20 +20,22 @@ void testRef();
 void main( )
 {
     __enable_interrupt();
-  PM5CTL0 =  0;
+    PM5CTL0 &= ~LOCKLPM5;
+    WDTCTL = WDTPW + WDTHOLD;      // Stop WDT
   FRCTL0 = FWPW | NWAITS_0; // Defines number of waitstates.
   CSCTL0 = CSKEY;
+  CSCTL1 |= DCOFSEL_0;
   //CSCTL2 = 0x0100;
   CSCTL2 = 0x0100 | 0x0003 ; // Select VLOCLK as source for ACLK, select DCOCLK as MCLKLK
-  WDTCTL = WDTPW + WDTHOLD;      // Stop WDT
-  //initADC();
-  while(1){
+
+  initADC();
+ /* while(1){
   __delay_cycles(10000);
-  //testMeasurement();
-  testRef();
-  }
+  testMeasurement();
+  //testRef();
+  } */
   //initADCDifferential( );
-  //loopConversion();
+  loopConversion();
 }
 
 void testRef(){

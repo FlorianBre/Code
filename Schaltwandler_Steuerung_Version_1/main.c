@@ -1,5 +1,6 @@
 #include <lib/ADC.h>
 #include <lib/Timer.h>
+#include <lib/LCD.h>
 #include <msp430fr6989.h>
 
 //---Module Description --------------------------------------------------
@@ -24,6 +25,7 @@ void main(void){
     __enable_interrupt();
     PM5CTL0 = 0;
     _no_operation();
+
     /*
      * Counter Testing TASSEL_1 = ACLK
      */
@@ -34,7 +36,7 @@ void main(void){
      * CCIS_0 = Caputer Compare input 0
      * CM_3 = both edges
      */
-     timerCaptureCompareA0(CCIS_0, TASSEL_2, CM_1);
+    // timerCaptureCompareA0(CCIS_0, TASSEL_2, CM_1);
 
     /*
      *  ADC testing
@@ -54,10 +56,12 @@ void main(void){
      * OUTMOD_7 = reset/set
      */
     //timerInitPWMA0(30, TASSEL_2, 0.9, OUTMOD_3);
-   // displayInit();
-   // displayShow(20);
-
-
+    /*lcdInit();
+    char a[] = {"Hello"};
+    lcdShowText(a,0,sizeof(a));
+    __delay_cycles(1000000);
+    lcdClear();
+    */
 }
 
 double CalculateDutyCycle(int vIn, int vOut, int tPeriod)

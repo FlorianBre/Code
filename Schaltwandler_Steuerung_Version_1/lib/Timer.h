@@ -54,7 +54,7 @@ void timerCaptureCompareA0(unsigned int, unsigned int, unsigned int);
 void timerCaptureCompareA1(unsigned int, unsigned int, unsigned int);
 
 /*
- * @brief Method for initializing timer A0 in Capture Compare Mode
+ * @brief Method for initializing timer B0 in Capture Compare Mode
  * @param clockSelect: Select timer clock (TASSEL_X)
  *        captureCompareInput: Select capture Compare Input Channel (CCIS_0 = P3.4 , CCIS_1 = P6.4)
  *        edgeSelect: Selects on which edge the CC is triggered. (CM_X)
@@ -62,27 +62,52 @@ void timerCaptureCompareA1(unsigned int, unsigned int, unsigned int);
 void timerCaptureCompareB0(unsigned int, unsigned int, unsigned int);
 
 /*
- * @brief Method for initializing timer A0 in Capture Compare Mode.
- * @param clockSelect: Select timer clock. (TASSEL_X)
- *        captureCompareInput: Select capture Compare Input Channel. (CCIS_0 = P3.4 , CCIS_1 = P6.4)
- *        edgeSelect: Selects on which edge the CC is triggered. (CM_X)
- */
-
-void timerInitPWMA0(int periodCycles, unsigned int clockSelect, double dutyCycle, unsigned int pwmOutputMode);
-/*
- * @brief Method for initializing timer A0 as PWM Timer. Outputs: P1.5, P7.1, P10.1
+ * @brief Method for initializing timer A0 as PWM Timer. Outputs: P1.0, P1.6
  * @param periodCycles: Number of cycles for a period of the PWM signal.
  *        clockSelect: Select timer clock. (TASSEL_X)
  *        dutyCycle: Select the duty cycle.
  *        pwmOutputMode: Select the output mode. (OUTMOD_3 = set/reset, OUTMOD_7 = reset/set)
  */
+void timerInitPWMA0(int periodCycles, unsigned int clockSelect, double dutyCycle, unsigned int pwmOutputMode);
 
+/*
+ * @brief Method for initializing timer A1 as PWM Timer. Outputs: P1.2, P3.3
+ * @param periodCycles: Number of cycles for a period of the PWM signal.
+ *        clockSelect: Select timer clock. (TASSEL_X)
+ *        dutyCycle: Select the duty cycle.
+ *        pwmOutputMode: Select the output mode. (OUTMOD_3 = set/reset, OUTMOD_7 = reset/set)
+ */
 void timerInitPWMA1(int periodCycles, unsigned int clockSelect, double dutyCycle, unsigned int pwmOutputMode);
+
+/*
+ * @brief Method for initializing timer B0 as PWM Timer. Outputs: P3.5, P6.5
+ * @param periodCycles: Number of cycles for a period of the PWM signal.
+ *        clockSelect: Select timer clock. (TASSEL_X)
+ *        dutyCycle: Select the duty cycle.
+ *        pwmOutputMode: Select the output mode. (OUTMOD_3 = set/reset, OUTMOD_7 = reset/set)
+ */
 void timerInitPWMB0(int periodCycles, unsigned int clockSelect, double dutyCycle, unsigned int pwmOutputMode);
 
-void timerSetDutyCycleA0(double dutyCycle);
-void timerSetDutyCycleA1(double dutyCycle);
-void timerSetDutyCycleB0(double dutyCycle);
+/*
+ * @brief Method for changing the duty cycle of the timer A0 in PWM mode.
+ * @param dutyCycle: Select the duty cycle.
+ *
+ */
+void timerSetDutyCycleA0(double);
+
+/*
+ * @brief Method for changing the duty cycle of the timer A1 in PWM mode.
+ * @param dutyCycle: Select the duty cycle.
+ *
+ */
+void timerSetDutyCycleA1(double);
+
+/*
+ * @brief Method for changing the duty cycle of the timer B0 in PWM mode.
+ * @param dutyCycle: Select the duty cycle.
+ *
+ */
+void timerSetDutyCycleB0(double);
 
 
 #endif /* LIB_TIMER_H_ */
