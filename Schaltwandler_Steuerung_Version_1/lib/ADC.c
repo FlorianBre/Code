@@ -6,7 +6,7 @@
  */
 #include <lib/ADC.h>
 #include <msp430.h>
-void adcInit(int clockSelect0, int clockSelect1, int differentialModeSelect, int sampleHoldSelect, int refSelect, int intRefSelecet, int channelSelect){
+double adcInit(int clockSelect0, int clockSelect1, int differentialModeSelect, int sampleHoldSelect, int refSelect, int intRefSelecet, int channelSelect){
     ADC12IER0 |= ADC12IE0;  // Enable ADC complete interrupt.
     ADC12CTL0 |= sampleHoldSelect | ADC12ON;    // Select SHT, Turn ADC on, Enable ADC
     ADC12CTL1 |= ADC12SHP | clockSelect0 | clockSelect1 ;   // select pulse sample mode, select clock source.
@@ -16,6 +16,9 @@ void adcInit(int clockSelect0, int clockSelect1, int differentialModeSelect, int
         REFCTL0 |= REFON | intRefSelecet;   // Turn on internal Reference Generator, select Reference
         while( REFCTL0 & REFGENBUSY){ };    // Wait for refernce to settle
     }
+    // Calculates the ADC correction factor.
+    return *CAL_ADC_OFFSET + (*CAL_ADC_GAIN_FACTOR + *ADC_ADC12VREF_FACTOR) / 32768.0;
+
 }
 
 int adcMeasurementPolling(){

@@ -23,7 +23,7 @@ FRCTL0 = FWPW | NWAITS_0; // Defines number of waitstates.
 //   while( REFCTL0 & REFGENBUSY){} // Wait for refernce to settle
 
       busyWaiting();
-    //LowPowerMode(3);
+      LowPowerMode(3);
 
    //  }
     }

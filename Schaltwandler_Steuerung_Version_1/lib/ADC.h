@@ -7,7 +7,12 @@
 
 #ifndef LIB_ADC_H_
 #define LIB_ADC_H_
-
+// Adress of Calibration Values
+#define ADC_ADC12VREF_FACTOR (unsigned int *) 0x01A1A
+#define ADC_ADC20VREF_FACTOR (unsigned int *) 0x01A1E
+#define ADC_ADC25VREF_FACTOR (unsigned int *) 0x01A24
+#define CAL_ADC_OFFSET (unsigned int *) 0x01A18
+#define CAL_ADC_GAIN_FACTOR (unsigned int *) 0x01A16
 /*
  * @brief Method for initializing the ADC converter.
  * @param clockSelect0: select ADC12CLK0 (ADC12SSEL0),
@@ -19,8 +24,9 @@
  *        refSelect: select Reference (ADC12VRSEL_X),
  *        intRefSelecet: select internal reference select (REFVSEL_X)
  *        channelSelect: select ADC channel (ADC12INCH_X)
+ *        @return Correction Factor.
  */
-void adcInit(int, int, int, int, int, int, int);
+double adcInit(int, int, int, int, int, int, int);
 
 /*
  * @brief  Method for carry out the ADC Measurement.
