@@ -85,7 +85,7 @@ __interrupt void ADC12_ISR(void)
 {
     // Memory 0 Interrupt
     if(ADC12IFG0) {
-    // testValue = ADC12MEM0 & 0x0FFF;      // Read in lower 12 bits.x
+    testValue = ADC12MEM0 & 0x0FFF;      // Read in lower 12 bits.x
       __bic_SR_register_on_exit(LPM3_bits+GIE); // Clear LPM bits upon ISR Exit
     }
 }
