@@ -1,7 +1,7 @@
 ******************************************************************************
                   MSP430 Linker PC v18.1.1                     
 ******************************************************************************
->> Linked Tue May 29 15:07:01 2018
+>> Linked Tue Jun  5 12:42:38 2018
 
 OUTPUT FILE NAME:   <TestTiming.out>
 ENTRY POINT SYMBOL: "_c_int00_noinit_noargs_mpu"  address: 00004400
