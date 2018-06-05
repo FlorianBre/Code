@@ -29,13 +29,14 @@ void initDMA(){
     __data16_write_addr((unsigned short) &DMA0SA,(unsigned long) ADRADC);
     // Destination adress.
     __data16_write_addr((unsigned short) &DMA0DA,(unsigned long) TIMADR);
-    // Single Block transfer
+    // Select ADC end of conversion.
     DMACTL0 |= DMA0TSEL_26;
+    // Single Block transfer
     DMA0SZ = 1;
     // Single Transfer Mode
     // No increment or decrement of soure and Destination adress
    // DMA0CTL = DMADT_0 | DMASRCINCR_0 | DMADSTINCR_0 | DMADSTBYTE | DMASRCBYTE; // Rpt, inc
-    DMA0CTL = DMADT_0 | DMASRCINCR_0 | DMADSTINCR_0; // Rpt, inc
+    DMA0CTL = DMADT_0 | DMASRCINCR_0 | DMADSTINCR_0 | DMAIE ; // Rpt, inc
     DMA0CTL |= DMAEN;                         // Enable DMA0
 }
 void adcTrigger(){
@@ -79,7 +80,6 @@ void softwareTrigger()
     test3 = *ADR3;
     _no_operation();
 }
-
 #pragma vector = ADC12_VECTOR
 __interrupt void ADC12_ISR(void)
 {

@@ -1,7 +1,7 @@
 ******************************************************************************
                   MSP430 Linker PC v18.1.1                     
 ******************************************************************************
->> Linked Tue Jun  5 16:19:13 2018
+>> Linked Tue Jun  5 16:49:31 2018
 
 OUTPUT FILE NAME:   <TestDMA.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs_mpu"  address: 00004400
@@ -79,7 +79,7 @@ MEMORY CONFIGURATION
   INT53                 0000fffa   00000002  00000002  00000000  RWIX
   INT54                 0000fffc   00000002  00000002  00000000  RWIX
   RESET                 0000fffe   00000002  00000002  00000000  RWIX
-  FRAM2                 00010000   00014000  00000e62  0001319e  RWIX
+  FRAM2                 00010000   00014000  00000e60  000131a0  RWIX
 
 
 SECTION ALLOCATION MAP
@@ -239,7 +239,7 @@ SYSNMI     0    0000fffc    00000002
 .reset     0    0000fffe    00000002     
                   0000fffe    00000002     rts430x_lc_rd_eabi.lib : boot.c.obj (.reset)
 
-.text      0    00010000    00000e62     
+.text      0    00010000    00000e60     
                   00010000    000002e0     rts430x_lc_rd_eabi.lib : addd.c.obj (.text:__mspabi_addd)
                   000102e0    00000280                            : frcmpyd.c.obj (.text:__TI_frcmpyd)
                   00010560    00000266                            : mpyd.c.obj (.text:__mspabi_mpyd)
@@ -252,29 +252,29 @@ SYSNMI     0    0000fffc    00000002
                   00010c8e    0000003e                            : asr32.asm.obj (.text:l_asr_const)
                   00010ccc    0000003e                            : lsl32.asm.obj (.text:l_lsl_const)
                   00010d0a    0000003e                            : lsr32.asm.obj (.text:l_lsr_const)
-                  00010d48    00000030     main.obj (.text:initDMA)
-                  00010d78    0000002c     MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : mpu_init.o (.text:__mpu_init)
-                  00010da4    00000024     rts430x_lc_rd_eabi.lib : copy_zero_init.c.obj (.text:decompress:ZI:__TI_zero_init_nomemset:__TI_zero_init_nomemset)
-                  00010dc8    00000024                            : mult32_f5hw.asm.obj (.text)
-                  00010dec    0000001a     main.obj (.text:main)
-                  00010e06    00000010     rts430x_lc_rd_eabi.lib : asr32.asm.obj (.text:l_asr)
-                  00010e16    00000010                            : lsl32.asm.obj (.text:l_lsl)
-                  00010e26    00000010                            : lsr32.asm.obj (.text:l_lsr)
-                  00010e36    0000000e     ADC.obj (.text:adcMeasurementInterrupt)
-                  00010e44    0000000c     ADC.obj (.text:adcStartMeasurement)
-                  00010e50    00000006     rts430x_lc_rd_eabi.lib : fltud.c.obj (.text:__mspabi_fltud)
-                  00010e56    00000006                            : exit.c.obj (.text:abort)
-                  00010e5c    00000004                            : pre_init.c.obj (.text:_system_pre_init)
-                  00010e60    00000002                            : startup.c.obj (.text:_system_post_cinit)
+                  00010d48    0000002e     main.obj (.text:initDMA)
+                  00010d76    0000002c     MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : mpu_init.o (.text:__mpu_init)
+                  00010da2    00000024     rts430x_lc_rd_eabi.lib : copy_zero_init.c.obj (.text:decompress:ZI:__TI_zero_init_nomemset:__TI_zero_init_nomemset)
+                  00010dc6    00000024                            : mult32_f5hw.asm.obj (.text)
+                  00010dea    0000001a     main.obj (.text:main)
+                  00010e04    00000010     rts430x_lc_rd_eabi.lib : asr32.asm.obj (.text:l_asr)
+                  00010e14    00000010                            : lsl32.asm.obj (.text:l_lsl)
+                  00010e24    00000010                            : lsr32.asm.obj (.text:l_lsr)
+                  00010e34    0000000e     ADC.obj (.text:adcMeasurementInterrupt)
+                  00010e42    0000000c     ADC.obj (.text:adcStartMeasurement)
+                  00010e4e    00000006     rts430x_lc_rd_eabi.lib : fltud.c.obj (.text:__mspabi_fltud)
+                  00010e54    00000006                            : exit.c.obj (.text:abort)
+                  00010e5a    00000004                            : pre_init.c.obj (.text:_system_pre_init)
+                  00010e5e    00000002                            : startup.c.obj (.text:_system_post_cinit)
 
 MODULE SUMMARY
 
        Module                 code   ro data   rw data
        ------                 ----   -------   -------
     .\
-       main.obj               178    2         6      
+       main.obj               176    2         6      
     +--+----------------------+------+---------+---------+
-       Total:                 178    2         6      
+       Total:                 176    2         6      
                                                       
     .\lib\
        ADC.obj                180    0         0      
@@ -338,7 +338,7 @@ MODULE SUMMARY
        Stack:                 0      0         160    
        Linker Generated:      0      18        0      
     +--+----------------------+------+---------+---------+
-       Grand Total:           3730   76        166    
+       Grand Total:           3728   76        166    
 
 
 LINKER GENERATED COPY TABLES
@@ -615,7 +615,7 @@ address   name
 000009ce  AESAXIN_L                              
 000004be  BCD2BIN                                
 000004bc  BIN2BCD                                
-00010e56  C$$EXIT                                
+00010e54  C$$EXIT                                
 0000043e  CAPTIO0CTL                             
 0000043f  CAPTIO0CTL_H                           
 0000043e  CAPTIO0CTL_L                           
@@ -1795,16 +1795,16 @@ ffffffff  __TI_pprof_out_hndl
 ffffffff  __TI_prof_data_size                    
 ffffffff  __TI_prof_data_start                   
 00010a0e  __TI_renormd                           
-00010da4  __TI_zero_init_nomemset                
+00010da2  __TI_zero_init_nomemset                
 ffffffff  __c_args__                             
 00000001  __mpu_enable                           
-00010d78  __mpu_init                             
+00010d76  __mpu_init                             
 00010000  __mspabi_addd                          
-00010e50  __mspabi_fltud                         
+00010e4e  __mspabi_fltud                         
 00010b5a  __mspabi_fltuld                        
 00010560  __mspabi_mpyd                          
-00010dc8  __mspabi_mpyl_f5hw                     
-00010e16  __mspabi_slll                          
+00010dc6  __mspabi_mpyl_f5hw                     
+00010e14  __mspabi_slll                          
 00010d04  __mspabi_slll_1                        
 00010ce0  __mspabi_slll_10                       
 00010cdc  __mspabi_slll_11                       
@@ -1820,7 +1820,7 @@ ffffffff  __c_args__
 00010cec  __mspabi_slll_7                        
 00010ce8  __mspabi_slll_8                        
 00010ce4  __mspabi_slll_9                        
-00010e06  __mspabi_sral                          
+00010e04  __mspabi_sral                          
 00010cc6  __mspabi_sral_1                        
 00010ca2  __mspabi_sral_10                       
 00010c9e  __mspabi_sral_11                       
@@ -1836,7 +1836,7 @@ ffffffff  __c_args__
 00010cae  __mspabi_sral_7                        
 00010caa  __mspabi_sral_8                        
 00010ca6  __mspabi_sral_9                        
-00010e26  __mspabi_srll                          
+00010e24  __mspabi_srll                          
 00010d42  __mspabi_srll_1                        
 00010d1e  __mspabi_srll_10                       
 00010d1a  __mspabi_srll_11                       
@@ -1855,18 +1855,18 @@ ffffffff  __c_args__
 00004400  _c_int00_noargs_mpu                    
 0000fffe  _reset_vector                          
 00002360  _stack                                 
-00010e60  _system_post_cinit                     
-00010e5c  _system_pre_init                       
-00010e56  abort                                  
+00010e5e  _system_post_cinit                     
+00010e5a  _system_pre_init                       
+00010e54  abort                                  
 00010ac0  adcInit                                
-00010e36  adcMeasurementInterrupt                
+00010e34  adcMeasurementInterrupt                
 00010bda  adcTrigger                             
 00004400  fram_ipe_end                           
 00004400  fram_ipe_start                         
 00004400  fram_rw_start                          
 00004400  fram_rx_start                          
 00010d48  initDMA                                
-00010dec  main                                   
+00010dea  main                                   
 0000a501  mpu_ctl0_value                         
 00001513  mpu_sam_value                          
 00000440  mpu_segment_border1                    
@@ -3380,19 +3380,19 @@ address   name
 00010d3e  __mspabi_srll_2                        
 00010d42  __mspabi_srll_1                        
 00010d48  initDMA                                
-00010d78  __mpu_init                             
-00010da4  __TI_zero_init_nomemset                
-00010dc8  __mspabi_mpyl_f5hw                     
-00010dec  main                                   
-00010e06  __mspabi_sral                          
-00010e16  __mspabi_slll                          
-00010e26  __mspabi_srll                          
-00010e36  adcMeasurementInterrupt                
-00010e50  __mspabi_fltud                         
-00010e56  C$$EXIT                                
-00010e56  abort                                  
-00010e5c  _system_pre_init                       
-00010e60  _system_post_cinit                     
+00010d76  __mpu_init                             
+00010da2  __TI_zero_init_nomemset                
+00010dc6  __mspabi_mpyl_f5hw                     
+00010dea  main                                   
+00010e04  __mspabi_sral                          
+00010e14  __mspabi_slll                          
+00010e24  __mspabi_srll                          
+00010e34  adcMeasurementInterrupt                
+00010e4e  __mspabi_fltud                         
+00010e54  C$$EXIT                                
+00010e54  abort                                  
+00010e5a  _system_pre_init                       
+00010e5e  _system_post_cinit                     
 ffffffff  __TI_pprof_out_hndl                    
 ffffffff  __TI_prof_data_size                    
 ffffffff  __TI_prof_data_start                   
