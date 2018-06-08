@@ -23,8 +23,8 @@ void main(void)
     WDTCTL = WDTPW | WDTHOLD;                 // Stop WDT
     PM5CTL0 &= ~LOCKLPM5;
     //adcTrigger();
-    //softwareTrigger();
-    timerTrigger();
+    softwareTrigger();
+    //timerTrigger();
 }
 void DMAinit(unsigned int triggerSource, volatile unsigned int *sourceAdr, volatile unsigned int *desAdr, unsigned int sourceIncrement, unsigned int destinationIncrement, unsigned int blockSize ){
     //Source adress
@@ -79,7 +79,7 @@ void initTimer(){
 void softwareTrigger()
 {
     DMAinit(DMA0TSEL_0, &TA0CCR0, &ADC12MEM0, DMASRCINCR_0,  DMADSTINCR_3, 3);
-    unsigned int a = 4096;
+    unsigned int a = 23;
     *TIMADR0 = a;
     test1 = *TIMADR0;
     test2 = *ADRADC0;

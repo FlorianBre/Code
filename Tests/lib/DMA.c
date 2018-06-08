@@ -23,10 +23,10 @@ void DMAinit0(unsigned int trigSrc, volatile unsigned int *srcAdr, volatile unsi
 
 void DMAinit1(unsigned int trigSrc, volatile unsigned int *srcAdr, volatile unsigned int *desAdr, unsigned int srcIncr, unsigned int desIncr, unsigned int transferSize ){
     __data16_write_addr((unsigned short) &DMA1SA,(unsigned long ) srcAdr);
-    __data16_write_addr((unsigned short) &DMA1DA,(unsigned long) desAdr);
+    //__data16_write_addr((unsigned short) &DMA1DA,(unsigned long) desAdr);
     DMACTL0 |= trigSrc;
     DMA1SZ = transferSize;
-    DMA1CTL = DMADT_0 | srcIncr |desIncr;
+    DMA1CTL = DMADT_5 | srcIncr |desIncr;
     DMA1CTL |= DMAEN;
 }
 

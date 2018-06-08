@@ -24,9 +24,10 @@
  *        refSelect: select Reference (ADC12VRSEL_X),
  *        intRefSelecet: select internal reference select (REFVSEL_X)
  *        channelSelect: select ADC channel (ADC12INCH_X)
+ *        InterruptEnable: Turn on or off complete ADC interrupt (ADC12IE0)
  *        @return Correction Factor.
  */
-double adcInit(int, int, int, int, int, int, int);
+double adcInit(int, int, int, int, int, int, int, int);
 
 /*
  * @brief  Method for carry out the ADC Measurement.
