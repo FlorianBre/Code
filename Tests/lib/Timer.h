@@ -40,7 +40,7 @@ void timerInitCounterA3(unsigned int, unsigned int);
  * @param clockSelect: Select timer clock (TASSEL_X)
  *        countMode: Select the timer count mode (MC_X).
  */
-void timerInitCounterB0(unsigned int);
+void timerInitCounterB0(unsigned int, unsigned int);
 
 /*
  * @brief Method for initializing timer A0 in Capture Compare Mode

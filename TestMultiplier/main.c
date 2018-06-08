@@ -1,4 +1,5 @@
 #include <msp430.h> 
+#include <lib\DMA.h>
 #define OP1ADR (unsigned long *) &MPY
 #define OP2ADR (unsigned long *) &OP2
 #define TIMADR (unsigned long *) &TA0CCR0
@@ -9,21 +10,20 @@ float test2;
 float test3;
 // result
 void simpleTest();
-void initDMA();
 void multiplyDMA();
 void multiplyDouble();
 void main(void)
 {
     __enable_interrupt();
     PM5CTL0 = 0;
-    WDTCTL = WDTPW+WDTHOLD;                   // Stop WDT
+    WDTCTL = WDTPW | WDTHOLD;                   // Stop WDT
     //simpleTest();
     //multiplyDMA();
-    multiplyDouble();
-    __no_operation();                         // For debugger
+    // multiplyDouble();
+    twoDMAs();
 }
 void multiplyDMA(){
-    initDMA();
+    DMAinit0(DMA0TSEL_0, &TA0CCR0, &OP2, DMASRCINCR_0, DMADSTINCR_0, 1);
     unsigned int multiplier = 20;
     MPY = multiplier;                        // Load first operand -signed mult
     TA0CCR0 = 30;
@@ -59,19 +59,13 @@ void simpleTest(){
     // RESLO word result
 }
 
-void initDMA(){
-    //Source adress
-    __data16_write_addr((unsigned short) &DMA0SA,(unsigned long) TIMADR);
-    // Destination adress.
-    __data16_write_addr((unsigned short) &DMA0DA,(unsigned long) OP2ADR);
-    // Select ADC end of conversion.
-    DMA0SZ = 1;
-    // Single Transfer Mode
-    // No increment or decrement of soure and Destination adress
-    // DMA0CTL = DMADT_0 | DMASRCINCR_0 | DMADSTINCR_0 | DMADSTBYTE | DMASRCBYTE; // Rpt, inc
-    DMA0CTL = DMADT_0 | DMASRCINCR_0 | DMADSTINCR_0; // Rpt, inc
-    DMA0CTL |= DMAEN;                         // Enable DMA0
-}
+
+
+
+
+
+
+
 
 
 

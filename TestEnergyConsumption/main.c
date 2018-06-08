@@ -8,7 +8,7 @@ void main(void)
 {
 __enable_interrupt();
 PM5CTL0 &= ~LOCKLPM5;
-WDTCTL |= WDTPW + WDTHOLD; // Stop watchdog timer.
+WDTCTL = WDTPW | WDTHOLD; // Stop watchdog timer.
 FRCTL0 = FWPW | NWAITS_0; // Defines number of waitstates.
 //CSCTL0 = CSKEY;
 //CSCTL1 =  DCORSEL | DCOFSEL_0; // Set DCO to high speed, select  24 MHz
@@ -17,13 +17,11 @@ FRCTL0 = FWPW | NWAITS_0; // Defines number of waitstates.
 // initTimerWakeUp( );
 // initPortInterruptWakeUp();
 //__delay_cycles(100000);
-//_no_operation();
+_no_operation();
     // while(1){
 //REFCTL0 |= REFON | REFVSEL_2;           // Turn on internal Reference Generator, internal ref = 2 V
 //   while( REFCTL0 & REFGENBUSY){} // Wait for refernce to settle
-
-      busyWaiting();
-      LowPowerMode(3);
+      //LowPowerMode(3);
 
    //  }
     }
