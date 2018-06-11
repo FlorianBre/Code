@@ -45,5 +45,8 @@ void adcMeasurementInterrupt();
 /*
  * @brief  Method to start the ADC Measurement.
  */
+
+void adcMeasurementSequence();
+
 static void adcStartMeasurement();
 #endif /* LIB_ADC_H_ */

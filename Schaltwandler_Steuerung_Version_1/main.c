@@ -69,10 +69,6 @@ double CalculateDutyCycle(int vIn, int vOut, int tPeriod)
         return (1-(vIn/vOut))*(2*lCoil_H/(tPeriod*rIn_ohm));
     }
 
-/*
- * Timer ISR.
- */
-
  #pragma vector=TIMER0_A0_VECTOR
 __interrupt void TIMER0_A0(void)
 {

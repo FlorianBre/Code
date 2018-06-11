@@ -3,7 +3,8 @@ long i = 0;
 void initTimerWakeUp();
 void busyWaiting();
 void initPortInterruptWakeUp();
-void LowPowerMode(int);
+void lowPowerMode(int);
+void pullDownPorts();
 void main(void)
 {
 __enable_interrupt();
@@ -21,13 +22,46 @@ _no_operation();
     // while(1){
 //REFCTL0 |= REFON | REFVSEL_2;           // Turn on internal Reference Generator, internal ref = 2 V
 //   while( REFCTL0 & REFGENBUSY){} // Wait for refernce to settle
-      //LowPowerMode(3);
+      lowPowerMode(3);
 
    //  }
     }
 
 
-void LowPowerMode(int mode){
+void pullDownPorts(){
+    P1DIR = 0x00;
+    P1REN = 0xFF;
+    P1OUT = 0x00;
+    P2DIR = 0x00;
+    P2REN = 0xFF;
+    P2OUT = 0x00;
+    P3DIR = 0x00;
+    P3REN = 0xFF;
+    P3OUT = 0x00;
+    P4DIR = 0x00;
+    P4REN = 0xFF;
+    P4OUT = 0x00;
+    P5DIR = 0x00;
+    P5REN = 0xFF;
+    P5OUT = 0x00;
+    P6DIR = 0x00;
+    P6REN = 0xFF;
+    P6OUT = 0x00;
+    P7DIR = 0x00;
+    P7REN = 0xFF;
+    P7OUT = 0x00;
+    P8DIR = 0x00;
+    P8REN = 0xFF;
+    P8OUT = 0x00;
+    P9DIR = 0x00;
+    P9REN = 0xFF;
+    P9OUT = 0x00;
+    P10DIR = 0x00;
+    P10REN = 0xFF;
+    P10OUT = 0x00;
+}
+
+void lowPowerMode(int mode){
     if ( mode == 0){
         __bis_SR_register(LPM0_bits + GIE);
     }

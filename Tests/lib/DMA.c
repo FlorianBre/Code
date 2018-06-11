@@ -15,8 +15,8 @@ void DMAinit0(unsigned int trigSrc, volatile unsigned int *srcAdr, volatile unsi
     DMACTL0 |= trigSrc;
     // Amount of Transfers
     DMA0SZ = transferSize;
-    // Single Transfer Mode
-    // select decrement or increment of source and destination address.
+    // Single Transfer Mode.
+    // Select decrement or increment of source and destination address.
     DMA0CTL = DMADT_0 | srcIncr |desIncr;
     DMA0CTL |= interruptEnable | DMAEN; // Enable DMA0
 }

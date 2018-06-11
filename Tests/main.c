@@ -19,12 +19,12 @@ void main(void){
     FRCTL0 = FWPW | NWAITS_0; // Defines number of waitstates.
     //twoDMAs();
     //timerTriggeredADC();
-    //sequenceADC();
+    sequenceADC();
     //completeTest();
     //triggerCCRwithDMA();
     //triggerDMAwithMultiplier();
     //interruptAfterMultiplication();
-    completeTestWithInterrupt();
+    //completeTestWithInterrupt();
 }
 
 void twoDMAs(){
@@ -67,7 +67,9 @@ void timerTriggeredADC()
     test1 = ADC12MEM0;
     _no_operation();
 }
-
+/*
+ * Method to test the sequence of channel Mode in Combination with the DMA.
+ */
 void sequenceADC(){
     // Multiple Samples after triggering
     _no_operation();
@@ -77,12 +79,14 @@ void sequenceADC(){
     // Select sequence of channels mode.
     DMAinit0(DMA0TSEL_26, &ADC12MEM0, &ADC12MEM5, DMASRCINCR_3, DMADSTINCR_3, 5, 0);
     ADC12CTL1 |= ADC12CONSEQ_1;
-    ADC12MCTL0 |= ADC12INCH_0; //Analog Channel 7
-    ADC12MCTL1 |= ADC12INCH_1; //Analog Channel 8
-    ADC12MCTL2 |= ADC12INCH_2; //Analog Channel 8
-    ADC12MCTL3 |= ADC12INCH_3; //Analog Channel 8
+    ADC12MCTL0 |= ADC12INCH_0; //Analog Channel 0
+    ADC12MCTL1 |= ADC12INCH_1; //Analog Channel 1
+    ADC12MCTL2 |= ADC12INCH_2; //Analog Channel 2
+    ADC12MCTL3 |= ADC12INCH_3; //Analog Channel 3
     ADC12MCTL4 |= ADC12INCH_4 | ADC12EOS; //Analog Channel 8
-    adcMeasurementPolling();
+    //adcMeasurementPolling();
+    ADC12CTL0 &= ~ADC12SC;                 // Clear the start bit.
+    ADC12CTL0 |= ADC12SC | ADC12ENC;       // Start the conversion.
     // Start conversion
     __delay_cycles(1000);
     _no_operation();
@@ -170,8 +174,7 @@ void completeTestWithInterrupt(){
     DMAinit0(DMA0TSEL_26, &ADC12MEM0, &MPYS, DMASRCINCR_0, DMADSTINCR_0, 2, 0);
     DMAinit1(DMA1TSEL_30, &ADC12MEM1, &OP2, DMASRCINCR_0, DMADSTINCR_0, 1, 0);
     DMAinit2(DMA0TSEL_29, &ADC12MEM18, &ADC12MEM18, DMASRCINCR_0, DMADSTINCR_0, 1, DMAIE);
-    //__data16_write_addr((unsigned short) &DMA1DA,(unsigned long) &DMA0DA);
-    _no_operation();
+    // ADC Multiple Conversion Mode.
     ADC12CTL0 |= ADC12MSC;
     // Select sequence of channels mode.
     ADC12CTL1 |= ADC12CONSEQ_1;
