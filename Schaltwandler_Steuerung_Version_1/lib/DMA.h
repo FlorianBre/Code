@@ -13,9 +13,10 @@
  *        srcInc: Select source no increment, increment, decrement of source address. (DMASRCINCR_X)
  *        desInc: Select source no increment, increment, decrement of destination address. (DMADSTINCR_X)
  *        transferSize: Select amount of transfers.
+ *        interruptEnable: Enable or disable DMA interrupt. (DMAIE)
  *
  */
-void DMAinit0(unsigned int, volatile unsigned int *, volatile unsigned int *, unsigned int, unsigned int, unsigned int);
+void DMAinit0(unsigned int, volatile unsigned int *, volatile unsigned int *, unsigned int, unsigned int, unsigned int, unsigned int);
 
 /*
  * @brief Method for initializing the Direct Memory Access Channel 1.
@@ -25,9 +26,10 @@ void DMAinit0(unsigned int, volatile unsigned int *, volatile unsigned int *, un
  *        srcInc: Select source no increment, increment, decrement of source address. (DMASRCINCR_X)
  *        desInc: Select source no increment, increment, decrement of destination address. (DMADSTINCR_X)
  *        transferSize: Select amount of transfers.
+ *        interruptEnable: Enable or disable DMA interrupt. (DMAIE)
  *
  */
-void DMAinit1(unsigned int, volatile unsigned int *, volatile unsigned int *, unsigned int, unsigned int, unsigned int);
+void DMAinit1(unsigned int, volatile unsigned int *, volatile unsigned int *, unsigned int, unsigned int, unsigned int, unsigned int);
 
 /*
  * @brief Method for initializing the Direct Memory Access Channel 2.
@@ -37,6 +39,7 @@ void DMAinit1(unsigned int, volatile unsigned int *, volatile unsigned int *, un
  *        srcInc: Select source no increment, increment, decrement of source address. (DMASRCINCR_X)
  *        desInc: Select source no increment, increment, decrement of destination address. (DMADSTINCR_X)
  *        transferSize: Select amount of transfers.
+ *        interruptEnable: Enable or disable DMA interrupt. (DMAIE)
  *
  */
-void DMAinit2(unsigned int, volatile unsigned int *, volatile unsigned int *, unsigned int, unsigned int, unsigned int);
+void DMAinit2(unsigned int, volatile unsigned int *, volatile unsigned int *, unsigned int, unsigned int, unsigned int, unsigned int);
