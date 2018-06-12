@@ -64,7 +64,7 @@ void main(void){
     */
 }
 
-double CalculateDutyCycle(int vIn, int vOut, int tPeriod)
+double calculateDutyCycle(int vIn, int vOut, int tPeriod)
     {
         return (1-(vIn/vOut))*(2*lCoil_H/(tPeriod*rIn_ohm));
     }

@@ -94,7 +94,7 @@ void timerCaptureCompareA0(unsigned int captureCompareInput, unsigned int clockS
             }
         }
 
-void timerInitPWMA0(int periodCycles, unsigned int clockSelect, double dutyCycle, unsigned int pwmOutputMode) {
+void timerInitPWMA0(unsigned int periodCycles, unsigned int clockSelect, double dutyCycle, unsigned int pwmOutputMode) {
         T_PERIOD_A0 = periodCycles;
         TA0CTL |= TACLR; // Reset Timer.
         TA0CTL |= clockSelect | MC_1; // Select timer clock source,Count up to the value in TA0CCR0.
@@ -111,7 +111,7 @@ void timerInitPWMA0(int periodCycles, unsigned int clockSelect, double dutyCycle
         T_ON_A0 = (T_PERIOD_A0 + 1.0) * dutyCycle;
     }
 
-    void timerInitPWMA1(int periodCycles, unsigned int clockSelect, double dutyCycle, unsigned int pwmOutputMode) {
+    void timerInitPWMA1(unsigned int periodCycles, unsigned int clockSelect, double dutyCycle, unsigned int pwmOutputMode) {
             T_PERIOD_A1 = periodCycles;
             TA1CTL |= TACLR;
             TA1CTL |= clockSelect | MC_1;
@@ -129,7 +129,7 @@ void timerInitPWMA0(int periodCycles, unsigned int clockSelect, double dutyCycle
             T_ON_A1 = (T_PERIOD_A1 + 1.0) * dutyCycle;
         }
 
-        void timerInitPWMB0(int periodCycles, unsigned int clockSelect, double dutyCycle, unsigned int pwmOutputMode) {
+        void timerInitPWMB0(unsigned int periodCycles, unsigned int clockSelect, double dutyCycle, unsigned int pwmOutputMode) {
                 T_PERIOD_B0 = periodCycles;
                 TB0CTL |= TACLR; // Reset Timer
                 TB0CTL |= clockSelect | MC_1; // Select timer clock source,Count up to the value in TB0CCR0.

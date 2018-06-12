@@ -3,7 +3,7 @@
 #include <lib/LCD.h>
 #include <lib/DMA.h>
 #include <msp430fr6989.h>
-unsigned int test1;
+//unsigned int test1;
 void twoDMAs();
 void completeTest();
 void timerTriggeredADC();
@@ -12,6 +12,7 @@ void triggerCCRwithDMA();
 void triggerDMAwithMultiplier();
 void interruptAfterMultiplication();
 void completeTestWithInterrupt();
+void adcSequenceInit(unsigned int, unsigned int);
 void main(void){
     __enable_interrupt();
     PM5CTL0 &= ~LOCKLPM5;
@@ -19,12 +20,13 @@ void main(void){
     FRCTL0 = FWPW | NWAITS_0; // Defines number of waitstates.
     //twoDMAs();
     //timerTriggeredADC();
-    sequenceADC();
+    //sequenceADC();
     //completeTest();
     //triggerCCRwithDMA();
     //triggerDMAwithMultiplier();
     //interruptAfterMultiplication();
     //completeTestWithInterrupt();
+    adcSequenceInit(2,5);
 }
 
 void twoDMAs(){
@@ -64,7 +66,7 @@ void timerTriggeredADC()
     // Select Aclk, count to TA0CCR0;
     TA0CTL |= TASSEL_1 |  MC_1;
     __delay_cycles(20000);
-    test1 = ADC12MEM0;
+    //test1 = ADC12MEM0;
     _no_operation();
 }
 /*
@@ -195,8 +197,17 @@ void completeTestWithInterrupt(){
     _no_operation();
 }
 
-
-
+volatile unsigned int *adr;
+void adcSequenceInit(unsigned int start, unsigned int end){
+    _nop();
+    int sequenceLength = end - start;
+    int i;
+    for(i = 0; i <= sequenceLength; i++){
+    *(&ADC12MCTL0+i) = start+i;
+    }
+    *(&ADC12MCTL0+i-1) |=  ADC12EOS;
+    _nop();
+}
 
 #pragma vector=TIMER0_A0_VECTOR
 __interrupt void TIMER0_A0(void)
