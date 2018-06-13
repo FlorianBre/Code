@@ -15,8 +15,7 @@
 #define CAL_ADC_GAIN_FACTOR (unsigned int *) 0x01A16
 /*
  * @brief Method for initializing the ADC converter for single channel measurement.
- * @param clockSelect0: select ADC12CLK0 (ADC12SSEL0),
- *        clockSelect1: Select ADC12CLK1 (ADC12SSEL1),
+ * @param clockSelect: select ADC12CLK (ADC12SSEL_X),
  *        differentialModeSelect: select differential or single mode (ADC12DIF)
  *        In differential Mode only analog channels with an even number can be selected.
  *        The next channel is automatically the differential partner  (e.g. select A4, pair: A4,A5)
@@ -28,13 +27,12 @@
  *        triggerSelect: Select trigger of the ADC measurement (ADC12CTL1: ADC12SHS0, ADC12SHS1, ADC12SHS2).
  *        @return Correction Factor.
  */
-double adcInitSingle(int, int, int, int, int, int, int, int, int);
+void adcInitSingle(int, int, int, int, int, int, int, int);
 
 /*
  * @brief Method for initializing the ADC converter for multiple channel measurement.
  *        (Only Channels in a row allowed).
- * @param clockSelect0: select ADC12CLK0 (ADC12SSEL0),
- *        clockSelect1: Select ADC12CLK1 (ADC12SSEL1),
+ * @param clockSelect: select ADC12CLK (ADC12SSEL_X),
  *        differentialModeSelect: select differential or single mode (ADC12DIF)
  *        In differential Mode only analog channels with an even number can be selected.
  *        The next channel is automatically the differential partner  (e.g. select A4, pair: A4,A5)
@@ -46,7 +44,7 @@ double adcInitSingle(int, int, int, int, int, int, int, int, int);
  *        startChannel: Select First ADC input channel,
  *        endChannel: Select Last ADC input channel.
  */
-void adcInitSequence(int, int, int, int, int, int, int, int, int, int);
+void adcInitSequence(int, int, int, int, int, int, int, int, int);
 
 /*
  * @brief  Method for carry out the ADC Measurement.

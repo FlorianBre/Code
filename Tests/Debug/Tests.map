@@ -1,7 +1,7 @@
 ******************************************************************************
                   MSP430 Linker PC v18.1.1                     
 ******************************************************************************
->> Linked Wed Jun 13 13:35:49 2018
+>> Linked Wed Jun 13 17:30:18 2018
 
 OUTPUT FILE NAME:   <Tests.out>
 ENTRY POINT SYMBOL: "_c_int00_noinit_noargs_mpu"  address: 00004400
@@ -79,7 +79,7 @@ MEMORY CONFIGURATION
   INT53                 0000fffa   00000002  00000002  00000000  RWIX
   INT54                 0000fffc   00000002  00000002  00000000  RWIX
   RESET                 0000fffe   00000002  00000002  00000000  RWIX
-  FRAM2                 00010000   00014000  0000010a  00013ef6  RWIX
+  FRAM2                 00010000   00014000  00000104  00013efc  RWIX
 
 
 SECTION ALLOCATION MAP
@@ -232,27 +232,27 @@ SYSNMI     0    0000fffc    00000002
 .reset     0    0000fffe    00000002     
                   0000fffe    00000002     rts430x_lc_rd_eabi.lib : boot.c.obj (.reset)
 
-.text      0    00010000    0000010a     
-                  00010000    00000066     ADC.obj (.text:adcInitSequence)
-                  00010066    00000062     main.obj (.text:main)
-                  000100c8    0000002c     MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : mpu_init.o (.text:__mpu_init)
-                  000100f4    0000000c     ADC.obj (.text:adcStartMeasurement)
-                  00010100    00000006     rts430x_lc_rd_eabi.lib : exit.c.obj (.text:abort)
-                  00010106    00000004                            : pre_init.c.obj (.text:_system_pre_init)
+.text      0    00010000    00000104     
+                  00010000    0000005c     ADC.obj (.text:adcInitSequence)
+                  0001005c    00000056     main.obj (.text:completeTestWithInterrupt)
+                  000100b2    0000002c     MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : mpu_init.o (.text:__mpu_init)
+                  000100de    0000001c     main.obj (.text:main)
+                  000100fa    00000006     rts430x_lc_rd_eabi.lib : exit.c.obj (.text:abort)
+                  00010100    00000004                            : pre_init.c.obj (.text:_system_pre_init)
 
 MODULE SUMMARY
 
        Module             code   ro data   rw data
        ------             ----   -------   -------
     .\
-       main.obj           132    4         0      
+       main.obj           148    4         0      
     +--+------------------+------+---------+---------+
-       Total:             132    4         0      
+       Total:             148    4         0      
                                                   
     .\lib\
-       ADC.obj            114    0         0      
+       ADC.obj            92     0         0      
     +--+------------------+------+---------+---------+
-       Total:             114    0         0      
+       Total:             92     0         0      
                                                   
     C:\ti\ccsv7\ccs_base\msp430\lib\FR59xx\MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib
        mpu_init.o         44     0         0      
@@ -295,7 +295,7 @@ MODULE SUMMARY
                                                   
        Stack:             0      0         160    
     +--+------------------+------+---------+---------+
-       Grand Total:       332    58        160    
+       Grand Total:       326    58        160    
 
 
 GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
@@ -559,7 +559,7 @@ address   name
 000009ce  AESAXIN_L                 
 000004be  BCD2BIN                   
 000004bc  BIN2BCD                   
-00010100  C$$EXIT                   
+000100fa  C$$EXIT                   
 0000043e  CAPTIO0CTL                
 0000043f  CAPTIO0CTL_H              
 0000043e  CAPTIO0CTL_L              
@@ -1735,19 +1735,19 @@ ffffffff  __TI_prof_data_size
 ffffffff  __TI_prof_data_start      
 ffffffff  __c_args__                
 00000001  __mpu_enable              
-000100c8  __mpu_init                
+000100b2  __mpu_init                
 00004400  _c_int00_noinit_noargs_mpu
 0000fffe  _reset_vector             
 00002360  _stack                    
-00010106  _system_pre_init          
-00010100  abort                     
+00010100  _system_pre_init          
+000100fa  abort                     
 00010000  adcInitSequence           
-000100f4  adcStartMeasurement       
+0001005c  completeTestWithInterrupt 
 00004400  fram_ipe_end              
 00004400  fram_ipe_start            
 00004400  fram_rw_start             
 00004400  fram_rx_start             
-00010066  main                      
+000100de  main                      
 0000a501  mpu_ctl0_value            
 00001513  mpu_sam_value             
 00000440  mpu_segment_border1       
@@ -3198,12 +3198,12 @@ address   name
 0000fffc  __TI_int54                
 0000fffe  _reset_vector             
 00010000  adcInitSequence           
-00010066  main                      
-000100c8  __mpu_init                
-000100f4  adcStartMeasurement       
-00010100  C$$EXIT                   
-00010100  abort                     
-00010106  _system_pre_init          
+0001005c  completeTestWithInterrupt 
+000100b2  __mpu_init                
+000100de  main                      
+000100fa  C$$EXIT                   
+000100fa  abort                     
+00010100  _system_pre_init          
 ffffffff  __TI_pprof_out_hndl       
 ffffffff  __TI_prof_data_size       
 ffffffff  __TI_prof_data_start      

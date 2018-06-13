@@ -12,6 +12,7 @@ void triggerCCRwithDMA();
 void triggerDMAwithMultiplier();
 void interruptAfterMultiplication();
 void completeTestWithInterrupt();
+void completeTestWithInterrupt2();
 void adcSequenceInit(unsigned int, unsigned int);
 void testRegisterWrite();
 void main(void){
@@ -26,14 +27,8 @@ void main(void){
     //triggerCCRwithDMA();
     //triggerDMAwithMultiplier();
     //interruptAfterMultiplication();
-    //completeTestWithInterrupt();
-    _nop();
-    adcInitSequence(0, ADC12SSEL1, 0, ADC12SHT0_1 , ADC12VRSEL_1, REFVSEL_0, 0, 0, 2,6);
-    _nop();
-    adcStartMeasurement();
-    __delay_cycles(10000);
-    _nop();
-
+    completeTestWithInterrupt();
+    //completeTestWithInterrupt2();
     //adcSequenceInit(2,5);
     //testRegisterWrite();
 }
@@ -62,7 +57,7 @@ void timerTriggeredADC()
      *  ADC12INCH_4 = Channel 8.7
      */
     //   adcInit(0, ADC12SSEL1, 0, ADC12SHT0_0 , ADC12VRSEL_1, REFVSEL_0, ADC12INCH_14);
-    adcInitSingle(0, ADC12SSEL1, 0, ADC12SHT0_0 , ADC12VRSEL_1, REFVSEL_0, ADC12INCH_14, 0, 0);
+    adcInitSingle(ADC12SSEL_1, 0, ADC12SHT0_0 , ADC12VRSEL_1, REFVSEL_0, ADC12INCH_14, 0, 0);
     // Select   TBO CCRO as start for conversion
     ADC12CTL1 |= ADC12SHS0;
     // Start timer TB0
@@ -84,7 +79,7 @@ void timerTriggeredADC()
 void sequenceADC(){
     // Multiple Samples after triggering
     _no_operation();
-    adcInitSequence(0, ADC12SSEL1, 0, ADC12SHT0_0 , ADC12VRSEL_1, REFVSEL_0, 0, 0, 2, 10);
+    adcInitSequence(ADC12SSEL_1, 0, ADC12SHT0_0 , ADC12VRSEL_1, REFVSEL_0, 0, 0, 2, 10);
     ADC12CTL0 &= ~ADC12SC;                 // Clear the start bit.
     ADC12CTL0 |= ADC12SC | ADC12ENC;       // Start the conversion.
     // Start conversion
@@ -96,24 +91,18 @@ void sequenceADC(){
  * Method to test Timer triggered ADC Sequence of Channel, plus transfering result into MUltiplier Operands
  */
 void completeTest(){
-    adcInitSingle(0, ADC12SSEL1, 0, ADC12SHT0_10 , ADC12VRSEL_1, REFVSEL_0, ADC12INCH_14, 0, 0);
+    adcInitSequence(ADC12SSEL_1, 0, ADC12SHT0_0 , ADC12VRSEL_1, REFVSEL_0, 0, ADC12SHS_1, 7, 8);
     DMAinit0(DMA0TSEL_26, &ADC12MEM0, &MPYS, DMASRCINCR_0, DMADSTINCR_0, 2, 0);
     DMAinit1(DMA1TSEL_30, &ADC12MEM1, &OP2, DMASRCINCR_0, DMADSTINCR_0, 1, 0);
     //__data16_write_addr((unsigned short) &DMA1DA,(unsigned long) &DMA0DA);
     _no_operation();
-    ADC12CTL0 |= ADC12MSC;
-    // Select sequence of channels mode.
-    ADC12CTL1 |= ADC12CONSEQ_1;
-    ADC12MCTL0 |= ADC12INCH_7; //Analog Channel 7
-    ADC12MCTL1 |= ADC12INCH_8 | ADC12EOS; //Analog Channel 8
-    // Select   TAO CCR1 as start for conversion
-    ADC12CTL1 |= ADC12SHS0;
-    ADC12CTL0 |= ADC12ENC;
     TA0CTL = TACLR;
     TA0CCR1 = 1000;
     TA0CCR0 = 2000;
+    //ADC12CTL1 |= ADC12SHS_1;
     TA0CCTL1 |= OUTMOD_1;
     // Select Aclk, count to TA0CCR0;
+    _no_operation();
     TA0CTL |= TASSEL_2 |  MC_1;
     // Start conversion
     __delay_cycles(15000);
@@ -170,24 +159,39 @@ void interruptAfterMultiplication(){
  * Plus Causing an interrupt after the Multiplier is finished
  */
 void completeTestWithInterrupt(){
-    adcInitSequence(0, ADC12SSEL1, 0, ADC12SHT0_0 , ADC12VRSEL_1, REFVSEL_0, 0, ADC12SHS0, 7, 8);
+    adcInitSequence(ADC12SSEL_0, 0, ADC12SHT0_15 , ADC12VRSEL_1, REFVSEL_0, 0, ADC12SHS_1, 7, 8);
+    _no_operation();
+    // DMA for transferring the first ADC measurement to Operand 1 of the hardware multiplier.
+    //DMAinit0(DMA0TSEL_26, &ADC12MEM0, &MPYS, DMASRCINCR_0, DMADSTINCR_0, 2, 0);
+    // DMA for transferring the second ADC measurement to Operand 2 of the hardware multiplier and triggering the multiplication.
+    //DMAinit1(DMA1TSEL_30, &ADC12MEM1, &OP2, DMASRCINCR_0, DMADSTINCR_0, 1, 0);
+    // DMA triggered by hardware multiplier, causing an interrupt after the transfer.
+    //DMAinit2(DMA0TSEL_29, &ADC12MEM18, &ADC12MEM18, DMASRCINCR_0, DMADSTINCR_0, 1, DMAIE);
+    TA0CTL = TACLR;
+    TA0CCR1 = 15000;
+    TA0CCR0 = 20000;
+    TA0CCTL1 |= OUTMOD_1;
+    // Select Aclk, count to TA0CCR0;
+    // Start conversion
+    TA0CTL |= TASSEL_1 |  MC_1;
+    __bis_SR_register(LPM3_bits);
+    _no_operation();
+}
+
+void completeTestWithInterrupt2(){
+    adcInitSequence(ADC12SSEL_1, 0, ADC12SHT0_0 , ADC12VRSEL_1, REFVSEL_0, 0, ADC12SHS_0, 7, 8);
     // DMA for transferring the first ADC measurement to Operand 1 of the hardware multiplier.
     DMAinit0(DMA0TSEL_26, &ADC12MEM0, &MPYS, DMASRCINCR_0, DMADSTINCR_0, 2, 0);
     // DMA for transferring the second ADC measurement to Operand 2 of the hardware multiplier and triggering the multiplication.
     DMAinit1(DMA1TSEL_30, &ADC12MEM1, &OP2, DMASRCINCR_0, DMADSTINCR_0, 1, 0);
     // DMA triggered by hardware multiplier, causing an interrupt after the transfer.
     DMAinit2(DMA0TSEL_29, &ADC12MEM18, &ADC12MEM18, DMASRCINCR_0, DMADSTINCR_0, 1, DMAIE);
-    ADC12CTL0 |= ADC12ENC;
-    TA0CTL = TACLR;
-    TA0CCR1 = 1000;
-    TA0CCR0 = 2000;
-    TA0CCTL1 |= OUTMOD_1;
-    // Select Aclk, count to TA0CCR0;
     _no_operation();
-    TA0CTL |= TASSEL_2 |  MC_1;
+    adcStartMeasurement();
+    //__bis_SR_register(LPM3_bits + GIE);
+    _no_operation();
     // Start conversion
-    __bis_SR_register(LPM3_bits + GIE);
-    _no_operation();
+
 }
 
 volatile unsigned int *adr;
