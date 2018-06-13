@@ -13,6 +13,7 @@ void triggerDMAwithMultiplier();
 void interruptAfterMultiplication();
 void completeTestWithInterrupt();
 void adcSequenceInit(unsigned int, unsigned int);
+void testRegisterWrite();
 void main(void){
     __enable_interrupt();
     PM5CTL0 &= ~LOCKLPM5;
@@ -26,7 +27,15 @@ void main(void){
     //triggerDMAwithMultiplier();
     //interruptAfterMultiplication();
     //completeTestWithInterrupt();
-    adcSequenceInit(2,5);
+    _nop();
+    adcInitSequence(0, ADC12SSEL1, 0, ADC12SHT0_1 , ADC12VRSEL_1, REFVSEL_0, 0, 0, 2,6);
+    _nop();
+    adcStartMeasurement();
+    __delay_cycles(10000);
+    _nop();
+
+    //adcSequenceInit(2,5);
+    //testRegisterWrite();
 }
 
 void twoDMAs(){
@@ -53,7 +62,7 @@ void timerTriggeredADC()
      *  ADC12INCH_4 = Channel 8.7
      */
     //   adcInit(0, ADC12SSEL1, 0, ADC12SHT0_0 , ADC12VRSEL_1, REFVSEL_0, ADC12INCH_14);
-    adcInit(0, ADC12SSEL1, 0, ADC12SHT0_0 , ADC12VRSEL_1, REFVSEL_0, ADC12INCH_14,0);
+    adcInitSingle(0, ADC12SSEL1, 0, ADC12SHT0_0 , ADC12VRSEL_1, REFVSEL_0, ADC12INCH_14, 0, 0);
     // Select   TBO CCRO as start for conversion
     ADC12CTL1 |= ADC12SHS0;
     // Start timer TB0
@@ -75,22 +84,11 @@ void timerTriggeredADC()
 void sequenceADC(){
     // Multiple Samples after triggering
     _no_operation();
-    adcInit(0, ADC12SSEL1, 0, ADC12SHT0_0 , ADC12VRSEL_1, REFVSEL_0, ADC12INCH_14,0);
-    //multiple ADC with one trigger
-    ADC12CTL0 |= ADC12MSC;
-    // Select sequence of channels mode.
-    DMAinit0(DMA0TSEL_26, &ADC12MEM0, &ADC12MEM5, DMASRCINCR_3, DMADSTINCR_3, 5, 0);
-    ADC12CTL1 |= ADC12CONSEQ_1;
-    ADC12MCTL0 |= ADC12INCH_0; //Analog Channel 0
-    ADC12MCTL1 |= ADC12INCH_1; //Analog Channel 1
-    ADC12MCTL2 |= ADC12INCH_2; //Analog Channel 2
-    ADC12MCTL3 |= ADC12INCH_3; //Analog Channel 3
-    ADC12MCTL4 |= ADC12INCH_4 | ADC12EOS; //Analog Channel 8
-    //adcMeasurementPolling();
+    adcInitSequence(0, ADC12SSEL1, 0, ADC12SHT0_0 , ADC12VRSEL_1, REFVSEL_0, 0, 0, 2, 10);
     ADC12CTL0 &= ~ADC12SC;                 // Clear the start bit.
     ADC12CTL0 |= ADC12SC | ADC12ENC;       // Start the conversion.
     // Start conversion
-    __delay_cycles(1000);
+    __delay_cycles(10000);
     _no_operation();
 }
 
@@ -98,7 +96,7 @@ void sequenceADC(){
  * Method to test Timer triggered ADC Sequence of Channel, plus transfering result into MUltiplier Operands
  */
 void completeTest(){
-    adcInit(0, ADC12SSEL1, 0, ADC12SHT0_10 , ADC12VRSEL_1, REFVSEL_0, ADC12INCH_14,0);
+    adcInitSingle(0, ADC12SSEL1, 0, ADC12SHT0_10 , ADC12VRSEL_1, REFVSEL_0, ADC12INCH_14, 0, 0);
     DMAinit0(DMA0TSEL_26, &ADC12MEM0, &MPYS, DMASRCINCR_0, DMADSTINCR_0, 2, 0);
     DMAinit1(DMA1TSEL_30, &ADC12MEM1, &OP2, DMASRCINCR_0, DMADSTINCR_0, 1, 0);
     //__data16_write_addr((unsigned short) &DMA1DA,(unsigned long) &DMA0DA);
@@ -172,18 +170,13 @@ void interruptAfterMultiplication(){
  * Plus Causing an interrupt after the Multiplier is finished
  */
 void completeTestWithInterrupt(){
-    adcInit(0, ADC12SSEL1, 0, ADC12SHT0_10 , ADC12VRSEL_1, REFVSEL_0, ADC12INCH_14,0);
+    adcInitSequence(0, ADC12SSEL1, 0, ADC12SHT0_0 , ADC12VRSEL_1, REFVSEL_0, 0, ADC12SHS0, 7, 8);
+    // DMA for transferring the first ADC measurement to Operand 1 of the hardware multiplier.
     DMAinit0(DMA0TSEL_26, &ADC12MEM0, &MPYS, DMASRCINCR_0, DMADSTINCR_0, 2, 0);
+    // DMA for transferring the second ADC measurement to Operand 2 of the hardware multiplier and triggering the multiplication.
     DMAinit1(DMA1TSEL_30, &ADC12MEM1, &OP2, DMASRCINCR_0, DMADSTINCR_0, 1, 0);
+    // DMA triggered by hardware multiplier, causing an interrupt after the transfer.
     DMAinit2(DMA0TSEL_29, &ADC12MEM18, &ADC12MEM18, DMASRCINCR_0, DMADSTINCR_0, 1, DMAIE);
-    // ADC Multiple Conversion Mode.
-    ADC12CTL0 |= ADC12MSC;
-    // Select sequence of channels mode.
-    ADC12CTL1 |= ADC12CONSEQ_1;
-    ADC12MCTL0 |= ADC12INCH_7; //Analog Channel 7
-    ADC12MCTL1 |= ADC12INCH_8 | ADC12EOS; //Analog Channel 8
-    // Select   TAO CCR1 as start for conversion
-    ADC12CTL1 |= ADC12SHS0;
     ADC12CTL0 |= ADC12ENC;
     TA0CTL = TACLR;
     TA0CCR1 = 1000;
@@ -203,11 +196,22 @@ void adcSequenceInit(unsigned int start, unsigned int end){
     int sequenceLength = end - start;
     int i;
     for(i = 0; i <= sequenceLength; i++){
-    *(&ADC12MCTL0+i) = start+i;
+        *(&ADC12MCTL0+i) = start+i;
     }
     *(&ADC12MCTL0+i-1) |=  ADC12EOS;
     _nop();
 }
+
+void testRegisterWrite(){
+    _nop();
+    ADC12CTL1 = ADC12CONSEQ_1 | ADC12SHP ;
+    _nop();
+    ADC12CTL1 = ADC12CONSEQ_2;
+    _nop();
+}
+
+
+
 
 #pragma vector=TIMER0_A0_VECTOR
 __interrupt void TIMER0_A0(void)
@@ -225,11 +229,11 @@ void __attribute__ ((interrupt(DMA_VECTOR))) DMA_ISR (void)
 #error Compiler not supported!
 #endif
 {
-  switch(__even_in_range(DMAIV,16))
-  {
+    switch(__even_in_range(DMAIV,16))
+    {
     case 0: break;
     case 2:                                 // DMA0IFG = DMA Channel 0
-      break;
+        break;
     case 4: break;                          // DMA1IFG = DMA Channel 1
     case 6:
         __bic_SR_register_on_exit(LPM3_bits+GIE);
@@ -242,7 +246,7 @@ void __attribute__ ((interrupt(DMA_VECTOR))) DMA_ISR (void)
     case 14: break;                         // DMA6IFG = DMA Channel 6
     case 16: break;                         // DMA7IFG = DMA Channel 7
     default: break;
-  }
+    }
 }
 
 
