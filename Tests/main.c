@@ -13,10 +13,11 @@ void triggerDMAwithMultiplier();
 void interruptAfterMultiplication();
 void completeTestWithInterrupt();
 void completeTestWithInterrupt2();
+void testDMAMultiplierInterrupt();
 void adcSequenceInit(unsigned int, unsigned int);
 void testRegisterWrite();
 void main(void){
-    __enable_interrupt();
+    //__enable_interrupt();
     PM5CTL0 &= ~LOCKLPM5;
     WDTCTL = WDTPW | WDTHOLD; // Stop watchdog timer.
     FRCTL0 = FWPW | NWAITS_0; // Defines number of waitstates.
@@ -27,10 +28,11 @@ void main(void){
     //triggerCCRwithDMA();
     //triggerDMAwithMultiplier();
     //interruptAfterMultiplication();
-    completeTestWithInterrupt();
+    //completeTestWithInterrupt();
     //completeTestWithInterrupt2();
     //adcSequenceInit(2,5);
     //testRegisterWrite();
+    testDMAMultiplierInterrupt();
 }
 
 void twoDMAs(){
@@ -159,22 +161,28 @@ void interruptAfterMultiplication(){
  * Plus Causing an interrupt after the Multiplier is finished
  */
 void completeTestWithInterrupt(){
-    adcInitSequence(ADC12SSEL_0, 0, ADC12SHT0_15 , ADC12VRSEL_1, REFVSEL_0, 0, ADC12SHS_1, 7, 8);
+    adcInitSequence(ADC12SSEL_1, 0, ADC12SHT0_0 , ADC12VRSEL_1, REFVSEL_0, 0, ADC12SHS_1, 7, 8);
     _no_operation();
     // DMA for transferring the first ADC measurement to Operand 1 of the hardware multiplier.
-    //DMAinit0(DMA0TSEL_26, &ADC12MEM0, &MPYS, DMASRCINCR_0, DMADSTINCR_0, 2, 0);
+    DMAinit0(DMA0TSEL_26, &ADC12MEM0, &MPYS, DMASRCINCR_0, DMADSTINCR_0, 2, 0);
     // DMA for transferring the second ADC measurement to Operand 2 of the hardware multiplier and triggering the multiplication.
-    //DMAinit1(DMA1TSEL_30, &ADC12MEM1, &OP2, DMASRCINCR_0, DMADSTINCR_0, 1, 0);
+    DMAinit1(DMA1TSEL_30, &ADC12MEM1, &OP2, DMASRCINCR_0, DMADSTINCR_0, 1, 0);
     // DMA triggered by hardware multiplier, causing an interrupt after the transfer.
-    //DMAinit2(DMA0TSEL_29, &ADC12MEM18, &ADC12MEM18, DMASRCINCR_0, DMADSTINCR_0, 1, DMAIE);
+    //DMAinit2(DMA2TSEL_29, &TA2CCR0, &DMA2CTL, DMASRCINCR_0, DMADSTINCR_0, 1, DMAIE);
+    DMAinit2(DMA2TSEL_29, &ADC12MEM1, &ADC12MEM5, DMASRCINCR_0, DMADSTINCR_0, 1, DMAIE);
+    //DMAinit2(DMA2TSEL_29, &TA2CCR0, &DMA2CTL, DMASRCINCR_0, DMADSTINCR_0, 2, 0);
+    //MPY32CTL0 |= MPYDLY32 | MPYDLYWRTEN | MPYM_0;
+    //TA2CCR0 |= DMA2CTL | DMAIE;
+    _no_operation();
     TA0CTL = TACLR;
     TA0CCR1 = 15000;
     TA0CCR0 = 20000;
     TA0CCTL1 |= OUTMOD_1;
     // Select Aclk, count to TA0CCR0;
     // Start conversion
+    //__bis_SR_register(SCG0);
     TA0CTL |= TASSEL_1 |  MC_1;
-    __bis_SR_register(LPM3_bits);
+    __bis_SR_register(LPM3_bits + GIE);
     _no_operation();
 }
 
@@ -185,7 +193,7 @@ void completeTestWithInterrupt2(){
     // DMA for transferring the second ADC measurement to Operand 2 of the hardware multiplier and triggering the multiplication.
     DMAinit1(DMA1TSEL_30, &ADC12MEM1, &OP2, DMASRCINCR_0, DMADSTINCR_0, 1, 0);
     // DMA triggered by hardware multiplier, causing an interrupt after the transfer.
-    DMAinit2(DMA0TSEL_29, &ADC12MEM18, &ADC12MEM18, DMASRCINCR_0, DMADSTINCR_0, 1, DMAIE);
+    //DMAinit2(DMA2TSEL_29, &ADC12MEM18, &ADC12MEM18, DMASRCINCR_0, DMADSTINCR_0, 1, DMAIE);
     _no_operation();
     adcStartMeasurement();
     //__bis_SR_register(LPM3_bits + GIE);
@@ -214,7 +222,52 @@ void testRegisterWrite(){
     _nop();
 }
 
+void testDMAMultiplierInterrupt(){
+    /*
+    //OP2 = 2;
+    //MPY32CTL0 |= MPYDLY32 | MPYDLYWRTEN | MPYM_0;
+    //__delay_cycles(1000);
+    DMAinit2(DMA2TSEL_29, &ADC12MEM2, &ADC12MEM6, DMASRCINCR_0, DMADSTINCR_0, 1, DMAIE);
+     MPY = 2;
+    //DMA2CTL |= DMALEVEL;
+    // DMAinit2(DMA2TSEL_29, &TA2CCR0, &DMA2CTL, DMASRCINCR_0, DMADSTINCR_0, 1, DMAIE);
+    //DMAinit2(DMA2TSEL_29, &TA2CCR0, &DMA2CTL, DMASRCINCR_0, DMADSTINCR_0, 2, DMAIE);
+    //TA2CCR0 |= DMA2CTL | DMAIE;
+   // MPY32CTL0 |= MPYDLY32 | MPYDLYWRTEN | MPYM_0;
+    _nop();
+    __bis_SR_register(GIE);
+    int i;
+    for(i = 0; i < 200; i++){
+        _nop();
+    }
+    _nop();
+    _nop();
+    //unsigned int *a
+    // a = READ_SR();
 
+    __bis_SR_register(SCG0);
+    __delay_cycles(10000);
+    _nop();
+    __bis_SR_register(SCG1);
+    __delay_cycles(10000);
+    _nop();
+    __bis_SR_register(GIE);
+    __delay_cycles(10000);
+    _nop();
+    __bis_SR_register(CPUOFF);
+    // __bis_SR_register(LPM2_bits + GIE); */
+
+    // Choose source and destination address of the transfer.
+    __data16_write_addr((unsigned short) &DMA2SA,(unsigned long ) &ADC12MEM2);
+    __data16_write_addr((unsigned short) &DMA2DA,(unsigned long) &ADC12MEM6);
+    // Set trigger source to: MPY ready.
+    DMACTL1 |= DMA2TSEL_29;
+    // Set transfer size to one.
+    DMA2SZ = 1;
+    // Choose single transfer, no source or destination adress increment, enable DMA interrupt, enable DMA.
+    DMA2CTL = DMADT_0 | DMASRCINCR_0 | DMADSTINCR_0 | DMAIE | DMAEN;
+    __bis_SR_register(LPM3_bits + GIE);
+}
 
 
 #pragma vector=TIMER0_A0_VECTOR
@@ -236,22 +289,61 @@ void __attribute__ ((interrupt(DMA_VECTOR))) DMA_ISR (void)
     switch(__even_in_range(DMAIV,16))
     {
     case 0: break;
-    case 2:                                 // DMA0IFG = DMA Channel 0
+    case 2:                           // DMA0IFG = DMA Channel 0
         break;
-    case 4: break;                          // DMA1IFG = DMA Channel 1
+    case 4:
+        _no_operation();
+        break;                          // DMA1IFG = DMA Channel 1
     case 6:
-        __bic_SR_register_on_exit(LPM3_bits+GIE);
         _no_operation();
         break;                          // DMA2IFG = DMA Channel 2
-
-    case 8: break;                          // DMA3IFG = DMA Channel 3
-    case 10: break;                         // DMA4IFG = DMA Channel 4
-    case 12: break;                         // DMA5IFG = DMA Channel 5
-    case 14: break;                         // DMA6IFG = DMA Channel 6
-    case 16: break;                         // DMA7IFG = DMA Channel 7
     default: break;
     }
 }
+
+/*
+#include <msp430fr6989.h>
+
+void main( ) {
+    PM5CTL0 &= ~LOCKLPM5;
+    WDTCTL = WDTPW | WDTHOLD; // Stop watchdog timer.
+    FRCTL0 = FWPW | NWAITS_0; // Defines number of waitstates.
+    // Choose source and destination address of the transfer.
+    __data16_write_addr((unsigned short) &DMA1SA,(unsigned long) &ADC12MEM1);
+    __data16_write_addr((unsigned short) &DMA1DA,(unsigned long) &ADC12MEM2);
+    // Set trigger source to: MPY ready.
+    DMACTL0 |= DMA2TSEL_29;
+    // Set transfer size to one.
+    DMA1SZ = 1;
+    // Choose single transfer, no source or destination adress increment, enable DMA interrupt, enable DMA.
+    DMA1CTL = DMADT_0 | DMASRCINCR_0 | DMADSTINCR_0 | DMAIE | DMAEN;
+    __bis_SR_register(LPM3_bits | GIE);
+}
+
+#if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
+#pragma vector=DMA_VECTOR
+__interrupt void DMA_ISR(void)
+#elif defined(__GNUC__)
+void __attribute__ ((interrupt(DMA_VECTOR))) DMA_ISR (void)
+#else
+#error Compiler not supported!
+#endif
+{
+    switch(__even_in_range(DMAIV,16))
+    {
+    case 0: break;
+    case 2:                           // DMA0IFG = DMA Channel 0
+        break;
+    case 4:
+        _no_operation();
+        break;                          // DMA1IFG = DMA Channel 1
+    case 6:
+        _no_operation();
+        break;                          // DMA2IFG = DMA Channel 2
+    default: break;
+    }
+} */
+
 
 
 

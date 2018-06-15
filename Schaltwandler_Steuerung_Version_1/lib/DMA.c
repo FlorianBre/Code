@@ -15,10 +15,9 @@ void DMAinit0(unsigned int trigSrc, volatile unsigned int *srcAdr, volatile unsi
     DMACTL0 |= trigSrc;
     // Amount of Transfers
     DMA0SZ = transferSize;
-    // Single Transfer Mode
-    // select decrement or increment of source and destination address.
-    DMA0CTL = DMADT_0 | srcIncr |desIncr;
-    DMA0CTL |= interruptEnable | DMAEN; // Enable DMA0
+    // Single Transfer Mode.
+    // Select decrement or increment of source and destination address.
+    DMA0CTL = DMADT_0 | srcIncr | desIncr | interruptEnable | DMAEN;
 }
 
 void DMAinit1(unsigned int trigSrc, volatile unsigned int *srcAdr, volatile unsigned int *desAdr, unsigned int srcIncr, unsigned int desIncr, unsigned int transferSize, unsigned int interruptEnable ){
@@ -26,16 +25,14 @@ void DMAinit1(unsigned int trigSrc, volatile unsigned int *srcAdr, volatile unsi
     __data16_write_addr((unsigned short) &DMA1DA,(unsigned long) desAdr);
     DMACTL0 |= trigSrc;
     DMA1SZ = transferSize;
-    DMA1CTL = DMADT_0 | srcIncr |desIncr;
-    DMA1CTL |= interruptEnable | DMAEN;
+    DMA1CTL = DMADT_0 | srcIncr | desIncr | interruptEnable | DMAEN;
 }
 
 void DMAinit2(unsigned int trigSrc, volatile unsigned int *srcAdr, volatile unsigned int *desAdr, unsigned int srcIncr, unsigned int desIncr, unsigned int transferSize, unsigned int interruptEnable){
     __data16_write_addr((unsigned short) &DMA2SA,(unsigned long ) srcAdr);
     __data16_write_addr((unsigned short) &DMA2DA,(unsigned long) desAdr);
-    DMACTL1 |= trigSrc;
+    DMACTL1 = trigSrc;
     DMA2SZ = transferSize;
-    DMA2CTL = DMADT_0 | srcIncr |desIncr;
-    DMA2CTL |= interruptEnable | DMAEN; // Enable DMA0
+    DMA2CTL = DMADT_0 | srcIncr | desIncr | interruptEnable | DMAEN;
 }
 

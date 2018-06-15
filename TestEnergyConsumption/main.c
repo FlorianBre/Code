@@ -18,11 +18,13 @@ FRCTL0 = FWPW | NWAITS_0; // Defines number of waitstates.
 // initTimerWakeUp( );
 // initPortInterruptWakeUp();
 //__delay_cycles(100000);
-_no_operation();
+pullDownPorts();
+//busyWaiting();
+lowPowerMode(2);
     // while(1){
 //REFCTL0 |= REFON | REFVSEL_2;           // Turn on internal Reference Generator, internal ref = 2 V
 //   while( REFCTL0 & REFGENBUSY){} // Wait for refernce to settle
-      lowPowerMode(3);
+
 
    //  }
     }
@@ -72,16 +74,18 @@ void lowPowerMode(int mode){
         __bis_SR_register(LPM2_bits + GIE);
     }
     if ( mode == 3){
-        __bis_SR_register(LPM3_bits + GIE);
+        __bis_SR_register(LPM2_bits + GIE);
     }
 }
 
 
 void busyWaiting(){
+    while(1){
     while(i < 80000){
            i ++;
        }
       i = 0;
+    }
 }
 void initPortInterruptWakeUp() {
         P1DIR &= ~BIT7; //Set pin 1.7 to the input direction. Pin 1.7 for starting the adc.
