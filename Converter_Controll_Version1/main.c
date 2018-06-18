@@ -3,7 +3,9 @@
 #include <lib/LCD.h>
 #include <math.h>
 #include <msp430fr6989.h>
-
+#define T_ON_B0 TB0CCR6
+#define T_ON2_B0 TB0CCR5
+#define T_PERIOD_B0 TB0CCR0
 
 //---Module Description --------------------------------------------------
 
@@ -17,6 +19,10 @@
  * ---- Pinout ----
  * P1.6 PWM Signal.
  * P9.2 D-Flip Flop control.
+ *
+ * P2.0 Alternative PWM Signal.
+ * P2.1 Alternative DFLipFlop Controll.
+ *
  */
 
 const double vIn_V = 2.25;
@@ -27,6 +33,8 @@ const double tPeriod = 93.0e-6;
 double duty;
 double calculateDutyCycle();
 void initDFlipFlopControl();
+void initDFlipFlopControl2();
+void timerSetDutyCycleTestB0(double);
 
 void main(void)
 {
@@ -35,11 +43,11 @@ void main(void)
     WDTCTL = WDTPW | WDTHOLD; // Stop watchdog timer.
     FRCTL0 = FWPW | NWAITS_0; // Defines number of waitstates.
     //duty = calculateDutyCycle();
-    duty = 0.5;
+    duty = 0.053;
     // Clock source = smclk.
     // Select Output 1 (P1.6).
-    timerInitPWMA0(1000, TASSEL_2, duty, OUTMOD_7, 1);
-    initDFlipFlopControl
+    timerInitPWMA0(133, TASSEL_2, duty, OUTMOD_7, 1);
+    initDFlipFlopControl();
     // Interrupt enable.
     while(1){
         _nop();
@@ -59,6 +67,36 @@ void initDFlipFlopControl() {
     P9OUT |= BIT3;
     P9SEL0 &= ~BIT3;
     P9SEL1 &= ~BIT3;
+}
+
+void initDFlipFlopControl2() {
+    T_PERIOD_B0 = 133 - 1;
+    TB0CTL |= TACLR; // Reset Timer
+    TB0CTL |= TASSEL_2 | MC_1; // Select timer clock source,Count up to the value in TB0CCR0.
+    TB0CCTL6 |= OUTMOD_7; // Select output mode.
+    TB0CCTL5 |= OUTMOD_6 | CCIE;
+    // P2.0 pwm output ccr6
+    P2DIR |= BIT0;
+    P2SEL0 &= ~BIT0;
+    P2SEL1 |= BIT0;
+    // P2.1 toggle reset
+    P2DIR |= BIT1;
+    P2SEL0 &= ~BIT1;
+    P2SEL1 |= BIT1;
+    timerSetDutyCycleTestB0(0.5);
+}
+
+
+void timerSetDutyCycleTestB0(double dutyCycle){
+    T_ON_B0 = (T_PERIOD_B0 + 1.0) * dutyCycle;
+    T_ON2_B0 = T_ON_B0;
+}
+
+
+#pragma vector= TIMER0_B5_VECTOR
+__interrupt void TIMER0_B5_VECTOR(void){
+    P2OUT |= BIT1;
+    TB0CCTL5 &= ~TAIFG;
 }
 
 #pragma vector=TIMER0_A1_VECTOR

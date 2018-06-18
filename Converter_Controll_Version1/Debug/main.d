@@ -1,9 +1,9 @@
 # FIXED
 
 main.obj: ../main.c
-main.obj: C:/Users/Flo/workspace_v7/Converter_Controll_Version1/lib/ADC.h
-main.obj: C:/Users/Flo/workspace_v7/Converter_Controll_Version1/lib/Timer.h
-main.obj: C:/Users/Flo/workspace_v7/Converter_Controll_Version1/lib/LCD.h
+main.obj: C:/Users/Flo/Desktop/Bachelorthesis/Code/Converter_Controll_Version1/lib/ADC.h
+main.obj: C:/Users/Flo/Desktop/Bachelorthesis/Code/Converter_Controll_Version1/lib/Timer.h
+main.obj: C:/Users/Flo/Desktop/Bachelorthesis/Code/Converter_Controll_Version1/lib/LCD.h
 main.obj: C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_18.1.1.LTS/include/math.h
 main.obj: C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_18.1.1.LTS/include/_ti_config.h
 main.obj: C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_18.1.1.LTS/include/linkage.h
@@ -18,9 +18,9 @@ main.obj: C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_18.1.1.LTS/include/intrinsics
 main.obj: C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_18.1.1.LTS/include/intrinsics_legacy_undefs.h
 
 ../main.c: 
-C:/Users/Flo/workspace_v7/Converter_Controll_Version1/lib/ADC.h: 
-C:/Users/Flo/workspace_v7/Converter_Controll_Version1/lib/Timer.h: 
-C:/Users/Flo/workspace_v7/Converter_Controll_Version1/lib/LCD.h: 
+C:/Users/Flo/Desktop/Bachelorthesis/Code/Converter_Controll_Version1/lib/ADC.h: 
+C:/Users/Flo/Desktop/Bachelorthesis/Code/Converter_Controll_Version1/lib/Timer.h: 
+C:/Users/Flo/Desktop/Bachelorthesis/Code/Converter_Controll_Version1/lib/LCD.h: 
 C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_18.1.1.LTS/include/math.h: 
 C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_18.1.1.LTS/include/_ti_config.h: 
 C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_18.1.1.LTS/include/linkage.h: 
