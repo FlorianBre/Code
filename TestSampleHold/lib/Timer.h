@@ -91,6 +91,7 @@ void timerInitPWMA1(int, unsigned int, double, unsigned int);
  *        clockSelect: Select timer clock. (TASSEL_X)
  *        dutyCycle: Select the duty cycle.
  *        pwmOutputMode: Select the output mode. (OUTMOD_3 = set/reset, OUTMOD_7 = reset/set)
+ *        addOutputMode: Select output mode of additional output.
  */
 void timerInitPWMB0(int, unsigned int, double, unsigned int, unsigned int);
 

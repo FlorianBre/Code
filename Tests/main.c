@@ -266,7 +266,7 @@ void testDMAMultiplierInterrupt(){
     DMA2SZ = 1;
     // Choose single transfer, no source or destination adress increment, enable DMA interrupt, enable DMA.
     DMA2CTL = DMADT_0 | DMASRCINCR_0 | DMADSTINCR_0 | DMAIE | DMAEN;
-    __bis_SR_register(LPM3_bits + GIE);
+    __bis_SR_register(LPM4_bits + GIE);
 }
 
 

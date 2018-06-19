@@ -79,7 +79,7 @@ void initDFlipFlopControl2() {
     P2DIR |= BIT0;
     P2SEL0 &= ~BIT0;
     P2SEL1 |= BIT0;
-    // P2.1 toggle reset
+    // P2.1 toggle reset ccr5
     P2DIR |= BIT1;
     P2SEL0 &= ~BIT1;
     P2SEL1 |= BIT1;
@@ -90,13 +90,6 @@ void initDFlipFlopControl2() {
 void timerSetDutyCycleTestB0(double dutyCycle){
     T_ON_B0 = (T_PERIOD_B0 + 1.0) * dutyCycle;
     T_ON2_B0 = T_ON_B0;
-}
-
-
-#pragma vector= TIMER0_B5_VECTOR
-__interrupt void TIMER0_B5_VECTOR(void){
-    P2OUT |= BIT1;
-    TB0CCTL5 &= ~TAIFG;
 }
 
 #pragma vector=TIMER0_A1_VECTOR

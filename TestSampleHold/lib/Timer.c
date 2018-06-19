@@ -136,7 +136,7 @@ void timerInitPWMA0(int periodCycles, unsigned int clockSelect, double dutyCycle
                 TB0CTL |= TACLR; // Reset Timer
                 TB0CTL |= clockSelect | MC_1; // Select timer clock source,Count up to the value in TB0CCR0.
                 TB0CCTL5 |= pwmOutputMode; // Select output mode.
-                TB0CCTL5 |= addOutputMode; // Select additional output mode.
+                TB0CCTL6 |= addOutputMode; // Select additional output mode.
                 P2DIR |= BIT0;
                 P2SEL0 &= ~BIT0;
                 P2SEL1 |= BIT0;

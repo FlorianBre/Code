@@ -1,5 +1,4 @@
 #include <msp430fr6989.h>
-
 long i = 0;
 void initTimerWakeUp();
 void busyWaiting();
@@ -20,16 +19,20 @@ FRCTL0 = FWPW | NWAITS_0; // Defines number of waitstates.
 // initTimerWakeUp( );
 // initPortInterruptWakeUp();
 //__delay_cycles(100000);
+
+//
+
 pullDownPorts();
 //outputDirPorts();
-//busyWaiting();
-__delay_cycles(500000);
-initTimerWakeUp();
-lowPowerMode(3);
+busyWaiting();
+//__delay_cycles(500000);
+//initTimerWakeUp();
+
+//RCCTL0 =  RCKEY | RCRS0OFF_1;
+//lowPowerMode(3);
     // while(1){
 //REFCTL0 |= REFON | REFVSEL_2;           // Turn on internal Reference Generator, internal ref = 2 V
 //   while( REFCTL0 & REFGENBUSY){} // Wait for refernce to settle
-
 
    //  }
     }
@@ -54,6 +57,7 @@ void outputDirPorts(){
     P8OUT = 0x00;
     P9OUT = 0x00;
     P10OUT = 0x00;
+    PJDIR = 0xFF;
 }
 void pullDownPorts(){
     P1DIR = 0x00;
@@ -101,6 +105,9 @@ void lowPowerMode(int mode){
     }
     if ( mode == 3){
         __bis_SR_register(LPM3_bits + GIE);
+    }
+    if ( mode == 4){
+        __bis_SR_register(LPM4_bits + GIE);
     }
 }
 
