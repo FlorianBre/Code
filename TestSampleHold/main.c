@@ -8,20 +8,38 @@
  * PMOS Cap entladen P4.3
  */
 
-        unsigned int a;
+unsigned int count = 0;
+unsigned int a;
 void main(void)
 {
     __enable_interrupt();
     P1DIR |= BIT5;
     P4DIR |= BIT3;
-    P4OUT |= BIT4;
+    P4OUT &= ~BIT3;
     PM5CTL0 &= ~LOCKLPM5;
     WDTCTL = WDTPW | WDTHOLD; // Stop watchdog timer.
     FRCTL0 = FWPW | NWAITS_0; // Defines number of waitstates.
-    timerInitPWMB0(10000, TASSEL_2, 0.3, OUTMOD_7, OUTMOD_6);
-    TB0CCTL5 |= CCIE;
-    adcInitSingle(ADC12SSEL_2, 0, ADC12SHT0_4, ADC12VRSEL_0, 0, ADC12INCH_7, ADC12IE0, ADC12SHS_0);
+    // Select clock cycles, clock source, dutycycle, outmode, additional outmode
+    timerInitPWMB0(133, TASSEL_2, 0.95, OUTMOD_3, OUTMOD_0);
+    TB0CCTL0 |= CCIE;
+    adcInitSingle(ADC12SSEL_2, 0, ADC12SHT0_15, ADC12VRSEL_0, 0, ADC12INCH_7, ADC12IE0, ADC12SHS_0);
 }
+
+#pragma vector=TIMER0_B0_VECTOR
+__interrupt void Timer_B(void)
+{
+    if(count > 100){
+        count = 0;
+        P1OUT ^= BIT5;
+        // Timer Function
+        P2SEL1 |= BIT0;
+        TB0CCTL6 = CCIE | OUTMOD_7;
+        // Close PMOS above Cap.
+        P4OUT |= BIT3;
+    }
+    count++;
+}
+
 
 // TimerB Interrupt Vector (TBIV) handler
 #if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
@@ -35,34 +53,28 @@ void __attribute__ ((interrupt(TIMER0_B1_VECTOR))) TIMER0_B1_ISR (void)
 {
     switch(__even_in_range(TB0IV,TB0IV_TBIFG))
     {
-    case TB0IV_NONE:    break;              // No interrupt
+    case TB0IV_NONE:
+        break;              // No interrupt
     case TB0IV_TB0CCR1: break;              // TB0CCR1 interrupt
     case TB0IV_TB0CCR2: break;              // TB0CCR2 interrupt
     case TB0IV_TB0CCR3: break;              // TB0CCR3 interrupt
     case TB0IV_TB0CCR4: break;              // TB0CCR4 interrupt
     case TB0IV_TB0CCR5:
-        adcMeasurementInterrupt();
         break;              // TB0CCR5 interrupt
-    case TB0IV_TB0CCR6: break;              // TB0CCR6 interrupt
-    case TB0IV_TB0IFG:                      // overflow
+    case TB0IV_TB0CCR6:
+        P1OUT ^= BIT5;
+        P2OUT |= BIT0;
+        // Select GPIO Function
+        P2SEL1 &= ~BIT0;
+        adcMeasurementInterrupt();
+        break;              // TB0CCR6 interrupt
+    case TB0IV_TB0IFG:      // overflow
+
         break;
-    default: break;
+    default:
+        break;
     }
 }
-
-/*#pragma vector = ADC12_VECTOR
-__interrupt void ADC12_ISR(void)
-{
-    if(ADC12IFG0) {
-
-    P4OUT &= BIT3;
-    P2SEL1 &= ~BIT0;
-    P2OUT |= BIT0;
-    P2SEL1 |= BIT0;
-    P4OUT |= BIT3;
-    }
-} */
-
 
 #if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
 #pragma vector=ADC12_VECTOR
@@ -82,14 +94,14 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
     case ADC12IV_ADC12LOIFG:  break;        // Vector  8:  ADC12BLO
     case ADC12IV_ADC12INIFG:  break;        // Vector 10:  ADC12BIN
     case ADC12IV_ADC12IFG0:                 // Vector 12:  ADC12MEM0 Interrupt
-        a = ADC12MEM0;
         P1OUT ^= BIT5;
+        TB0CCTL6 &= ~CCIE;
+        a = ADC12MEM0;
+        // Open PMOS to discharge Cap.
         P4OUT &= ~BIT3;
-        P2SEL1 &= ~BIT0;
-        P2OUT |= BIT0;
-        P2SEL1 |= BIT0;
-        P4OUT |= BIT3;
-
+        // Open transmission Gate
+        P2OUT &= ~BIT0;
+        _nop();
       break;
     case ADC12IV_ADC12IFG1:   break;        // Vector 14:  ADC12MEM1
     case ADC12IV_ADC12IFG2:   break;        // Vector 16:  ADC12MEM2

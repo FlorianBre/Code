@@ -42,7 +42,9 @@ void main(void)
     PM5CTL0 &= ~LOCKLPM5;
     WDTCTL = WDTPW | WDTHOLD; // Stop watchdog timer.
     FRCTL0 = FWPW | NWAITS_0; // Defines number of waitstates.
-    //duty = calculateDutyCycle();
+    _nop();
+    duty = calculateDutyCycle();
+    _nop();
     duty = 0.053;
     // Clock source = smclk.
     // Select Output 1 (P1.6).

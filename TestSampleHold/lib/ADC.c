@@ -54,7 +54,7 @@ int adcMeasurementPolling(){
 }
 void adcMeasurementInterrupt() {
     adcStartMeasurement();
-    __bis_SR_register(LPM3_bits + GIE);    // Low Power Mode 3 with interrupts enabled
+    //__bis_SR_register(LPM3_bits + GIE);    // Low Power Mode 3 with interrupts enabled
 }
 void adcStartMeasurement(){
     ADC12CTL0 &= ~ADC12SC;                 // Clear the start bit.

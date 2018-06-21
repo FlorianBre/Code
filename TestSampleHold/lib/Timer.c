@@ -138,8 +138,8 @@ void timerInitPWMA0(int periodCycles, unsigned int clockSelect, double dutyCycle
                 TB0CCTL5 |= pwmOutputMode; // Select output mode.
                 TB0CCTL6 |= addOutputMode; // Select additional output mode.
                 P2DIR |= BIT0;
-                P2SEL0 &= ~BIT0;
-                P2SEL1 |= BIT0;
+                //P2SEL0 &= ~BIT0;
+                //P2SEL1 |= BIT0;
                 P2DIR |= BIT1;
                 P2SEL0 &= ~BIT1;
                 P2SEL1 |= BIT1;
