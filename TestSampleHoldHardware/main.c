@@ -1,84 +1,64 @@
 #include <msp430.h> 
 #include <lib/Timer.h>
 #include <lib/ADC.h>
-/*
- * ---- Pinout ----
- * PWM Signal: P2.1
- * Transmission Gates in Reihe P2.0
- * PMOS Cap entladen P4.3
- */
 
-unsigned int count = 0;
-unsigned int a;
+/**
+ * Pinout:
+ * PWM: P2.1
+ * ADCinit: P1.3
+ * Sample Hold ready: P1.4
+ */
+void counter();
+int count = 0;
 void main(void)
 {
     __enable_interrupt();
-    P1DIR |= BIT5;
-    P4DIR |= BIT3;
-    P4OUT &= ~BIT3;
-    PM5CTL0 &= ~LOCKLPM5;
-    WDTCTL = WDTPW | WDTHOLD; // Stop watchdog timer.
-    FRCTL0 = FWPW | NWAITS_0; // Defines number of waitstates.
-    //Select number of cycles.
-    int cycles = 133;
-    // Select duty cycle.
-    double duty = 0.05;
-    // Select clock cycles, clock source, dutycycle, outmode, additional outmode.
-    timerInitPWMB0(133, TASSEL_2, duty, OUTMOD_7, OUTMOD_0);
-    TB0CCTL0 |= CCIE;
-    adcInitSingle(ADC12SSEL_2, 0, ADC12SHT0_1, ADC12VRSEL_0, 0, ADC12INCH_7, ADC12IE0, ADC12SHS_0);
+	WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
+	PM5CTL0 &= ~LOCKLPM5;
+	//Test Pin
+	P1DIR |= BIT5;
+	P1OUT &= ~BIT5;
+
+	P1IFG &= ~BIT4;
+	P1DIR |= BIT3;
+	P1OUT &= ~BIT3;
+	P1DIR &= ~BIT4;
+	P1IE |= BIT4;   // P1.4 interrupt enabled
+    P1IES &= ~BIT4; // P1.4 lo/hi edge
+	P1IFG &= ~BIT4; // P1.4 IFG cleared
+	__delay_cycles(1000);
+	double duty = 0.2;
+	int cycles = 130;
+	timerInitPWMB0(cycles, TASSEL_2, duty, OUTMOD_7, OUTMOD_0);
+	adcInitSingle(ADC12SSEL_2, 0, ADC12SHT0_10, ADC12VRSEL_0, 0, ADC12INCH_7, ADC12IE0, ADC12SHS_0);
+	_nop();
+	while(1){
+	    _nop();
+	   counter();
+	    //__delay_cycles(2000);
+	    //P1OUT |= BIT3;
+	   _nop();
+	}
+
 }
 
-#pragma vector=TIMER0_B0_VECTOR
-__interrupt void Timer_B(void)
-{
-    if(count > 100){
+void counter() {
+    if( count > 500){
         count = 0;
-        P1OUT ^= BIT5;
-        // Timer Function
-        P2SEL1 |= BIT0;
-        TB0CCTL6 = CCIE | OUTMOD_3;
-        // Close PMOS above Cap.
-        P4OUT |= BIT3;
+        // Adc init
+        P1OUT |= BIT3;
     }
+
     count++;
 }
 
-
-// TimerB Interrupt Vector (TBIV) handler
-#if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
-#pragma vector=TIMER0_B1_VECTOR
-__interrupt void TIMER0_B1_ISR(void)
-#elif defined(__GNUC__)
-void __attribute__ ((interrupt(TIMER0_B1_VECTOR))) TIMER0_B1_ISR (void)
-#else
-#error Compiler not supported!
-#endif
-{
-    switch(__even_in_range(TB0IV,TB0IV_TBIFG))
+#pragma vector=PORT1_VECTOR
+__interrupt void Port_1(void)
     {
-    case TB0IV_NONE:
-        break;              // No interrupt
-    case TB0IV_TB0CCR1: break;              // TB0CCR1 interrupt
-    case TB0IV_TB0CCR2: break;              // TB0CCR2 interrupt
-    case TB0IV_TB0CCR3: break;              // TB0CCR3 interrupt
-    case TB0IV_TB0CCR4: break;              // TB0CCR4 interrupt
-    case TB0IV_TB0CCR5:
-        break;              // TB0CCR5 interrupt
-    case TB0IV_TB0CCR6:
-        P1OUT ^= BIT5;
-        P2OUT |= BIT0;
-        // Select GPIO Function
-        P2SEL1 &= ~BIT0;
-        adcMeasurementInterrupt();
-        break;              // TB0CCR6 interrupt
-    case TB0IV_TB0IFG:      // overflow
-
-        break;
-    default:
-        break;
+    P1OUT ^= BIT5;
+    P1IFG &= ~BIT4;
+    adcMeasurementInterrupt();
     }
-}
 
 #if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
 #pragma vector=ADC12_VECTOR
@@ -98,13 +78,9 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
     case ADC12IV_ADC12LOIFG:  break;        // Vector  8:  ADC12BLO
     case ADC12IV_ADC12INIFG:  break;        // Vector 10:  ADC12BIN
     case ADC12IV_ADC12IFG0:                 // Vector 12:  ADC12MEM0 Interrupt
+        ADC12IFGR0 &= ~ADC12IFG0;
         P1OUT ^= BIT5;
-        TB0CCTL6 &= ~CCIE;
-        a = ADC12MEM0;
-        // Open PMOS to discharge Cap.
-        P4OUT &= ~BIT3;
-        // Open transmission Gate
-        P2OUT &= ~BIT0;
+        P1OUT &= ~BIT3;
         _nop();
       break;
     case ADC12IV_ADC12IFG1:   break;        // Vector 14:  ADC12MEM1
@@ -142,5 +118,11 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
     default: break;
   }
 }
+
+
+
+
+
+
 
 

@@ -12,10 +12,10 @@ __enable_interrupt();
 PM5CTL0 &= ~LOCKLPM5;
 WDTCTL = WDTPW | WDTHOLD; // Stop watchdog timer.
 FRCTL0 = FWPW | NWAITS_0; // Defines number of waitstates.
-//CSCTL0 = CSKEY;
+CSCTL0 = CSKEY;
 //CSCTL1 =  DCORSEL | DCOFSEL_0; // Set DCO to high speed, select  24 MHz
 //CSCTL3 = DIVM_0; // Divide MCLK by 0
-//CSCTL2 = 0x0100 | 0x0003 ; // Select VLOCLK as source for ACLK, select DCOCLK as MCLK
+CSCTL2 = SELA_1 | SELS_1 | SELM_3; // Select VLOCLK as source for ACLK
 // initTimerWakeUp( );
 // initPortInterruptWakeUp();
 //__delay_cycles(100000);
@@ -24,12 +24,15 @@ FRCTL0 = FWPW | NWAITS_0; // Defines number of waitstates.
 
 pullDownPorts();
 //outputDirPorts();
-busyWaiting();
+// MPUCTL0 = 0xA500;
+_nop();
+//busyWaiting();
 //__delay_cycles(500000);
 //initTimerWakeUp();
 
 //RCCTL0 =  RCKEY | RCRS0OFF_1;
-//lowPowerMode(3);
+//PMMCTL0 = 0xA500;
+//lowPowerMode(1);
     // while(1){
 //REFCTL0 |= REFON | REFVSEL_2;           // Turn on internal Reference Generator, internal ref = 2 V
 //   while( REFCTL0 & REFGENBUSY){} // Wait for refernce to settle
