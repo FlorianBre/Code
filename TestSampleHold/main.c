@@ -24,7 +24,7 @@ void main(void)
     // Select duty cycle.
     double duty = 0.05;
     // Select clock cycles, clock source, dutycycle, outmode, additional outmode.
-    timerInitPWMB0(133, TASSEL_2, duty, OUTMOD_7, OUTMOD_0);
+    timerInitPWMB0(cycles, TASSEL_2, duty, OUTMOD_7, OUTMOD_0);
     TB0CCTL0 |= CCIE;
     adcInitSingle(ADC12SSEL_2, 0, ADC12SHT0_1, ADC12VRSEL_0, 0, ADC12INCH_7, ADC12IE0, ADC12SHS_0);
 }
