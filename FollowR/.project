@@ -33,7 +33,13 @@
 		<link>
 			<name>IQmathLib.h</name>
 			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/ti/msp430/IQMATHLIB_01_10_00_05/include/IQmathLib.h</locationURI>
+			<locationURI>copy_PARENT/ti/msp430/IQMATHLIB_01_10_00_05/include/IQmathLib.h</locationURI>
 		</link>
 	</linkedResources>
+	<variableList>
+		<variable>
+			<name>copy_PARENT</name>
+			<value>$%7BPARENT-1-TI_PRODUCTS_DIR%7D</value>
+		</variable>
+	</variableList>
 </projectDescription>

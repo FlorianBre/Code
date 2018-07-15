@@ -36,16 +36,15 @@ void main(void)
     const _iq c = init();
     //fillLut(c);
     _nop();
-    //__delay_cycles(10000000);
+    __delay_cycles(10000000);
     while(1){
         _nop();
         measure();
-        ADC12MEM0 = 3000;
-        ADC12MEM1 = 4000;
-        //TB0CCR5 =  calculateDuty(c);
-        //__delay_cycles(1000000);
+        //ADC12MEM0 = 3000;
+        //ADC12MEM1 = 4000;
+        TB0CCR5 =  calculateDuty(c);
         //TB0CCR5 =  lookUp();
-        TB0CCR5 =  calRelation(c);
+        //TB0CCR5 =  calRelation(c);
         _nop();
     }
 }
