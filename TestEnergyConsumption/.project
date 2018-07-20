@@ -24,4 +24,16 @@
 		<nature>org.eclipse.cdt.core.ccnature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>IQmathLib.a</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/ti/msp430/IQMATHLIB_01_10_00_05/libraries/CCS/MPY32/5xx_6xx/IQmathLib.a</locationURI>
+		</link>
+		<link>
+			<name>IQmathLib.h</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/ti/msp430/IQMATHLIB_01_10_00_05/include/IQmathLib.h</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>

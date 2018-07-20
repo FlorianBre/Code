@@ -27,7 +27,7 @@
  *        triggerSelect: Select trigger of the ADC measurement (ADC12CTL1: ADC12SHS0, ADC12SHS1, ADC12SHS2).
  *        @return Correction Factor.
  */
-void adcInitSingle(int, int, int, int, int, int, int, int);
+void adcInitSingle(unsigned int,unsigned int,unsigned int,unsigned int,unsigned int,unsigned int,unsigned int,unsigned int);
 
 /*
  * @brief Method for initializing the ADC converter for multiple channel measurement.
@@ -39,12 +39,12 @@ void adcInitSingle(int, int, int, int, int, int, int, int);
  *        sampleHoldSelect: select Sample and Hold time (ADC12SHT0_X),
  *        refSelect: select Reference (ADC12VRSEL_X),
  *        intRefSelecet: select internal reference select (REFVSEL_X),
- *        interruptEnable: Turn on or off ADC interrupt for specific memory (ADC12IEx),
+ *        interruptEnable: Turn on or off complete ADC interrupt (ADC12IE0),
  *        triggerSelect: Select trigger of the ADC measurement (ADC12CTL1: ADC12SHS0, ADC12SHS1, ADC12SHS2),
  *        startChannel: Select First ADC input channel,
  *        endChannel: Select Last ADC input channel.
  */
-void adcInitSequence(int, int, int, int, int, int, int, int, int);
+void adcInitSequence(unsigned int,unsigned int,unsigned int,unsigned int,unsigned int,unsigned int,unsigned int,unsigned int,unsigned int);
 
 /*
  * @brief  Method for carry out the ADC Measurement.
@@ -63,4 +63,10 @@ void adcMeasurementInterrupt();
  * @brief  Method to start the ADC Measurement.
  */
 void adcStartMeasurement();
+
+/*
+ * @brief Method for configuring Port.
+ * @param Selected input channel.
+ */
+void configureChannel(unsigned int);
 #endif /* LIB_ADC_H_ */

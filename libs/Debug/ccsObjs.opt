@@ -1,0 +1,1 @@
+"./ADC.obj" "./lib/ADC.obj" "./lib/DMA.obj" "./lib/LCD.obj" "./lib/Timer.obj" "../lnk_msp430fr6989.cmd" -llibmpu_init.a -llibmath.a -llibc.a 

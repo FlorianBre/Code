@@ -14,6 +14,8 @@
 #define T_ON_B0 TB0CCR5
 #define T_ADD_B0 TB0CCR6
 #define T_PERIOD_B0 TB0CCR0
+#define T_PERIOD_A2 TA1CCR0
+#define T_PERIOD_A3 TA1CCR0
 
 void timerInitCounterA0(unsigned int clockSelect, unsigned int countMode, unsigned int countValue){
     T_PERIOD_A0 = countValue;
@@ -24,7 +26,7 @@ void timerInitCounterA0(unsigned int clockSelect, unsigned int countMode, unsign
 void timerInitCounterA1(unsigned int clockSelect, unsigned int countMode, unsigned int countValue){
     T_PERIOD_A1 = countValue;
     TA1CTL = TACLR;
-    TA1CTL |= clockSelect |  countMode;
+    TA1CTL |= clockSelect |  countMode | TAIE;
 }
 
 void timerInitCounterA2(unsigned int clockSelect, unsigned int countMode, unsigned int countValue){
@@ -138,12 +140,11 @@ void timerInitPWMA0(int periodCycles, unsigned int clockSelect, double dutyCycle
             T_ON_A1 = (T_PERIOD_A1 + 1.0) * dutyCycle;
         }
 
-        void timerInitPWMB0(int periodCycles, unsigned int clockSelect, double dutyCycle, unsigned int pwmOutputMode, unsigned int addOutputMode) {
+        void timerInitPWMB0(int periodCycles, unsigned int clockSelect, double dutyCycle, unsigned int pwmOutputMode) {
                 T_PERIOD_B0 = periodCycles;
                 TB0CTL |= TACLR; // Reset Timer
                 TB0CTL |= clockSelect | MC_1; // Select timer clock source,Count up to the value in TB0CCR0.
                 TB0CCTL5 |= pwmOutputMode; // Select output mode.
-                TB0CCTL5 |= addOutputMode; // Select additional output mode.
                 P2DIR |= BIT0;
                 P2SEL0 &= ~BIT0;
                 P2SEL1 |= BIT0;

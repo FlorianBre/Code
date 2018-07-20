@@ -97,7 +97,7 @@ void timerInitPWMA1(int, unsigned int, double, unsigned int);
  *        dutyCycle: Select the duty cycle.
  *        pwmOutputMode: Select the output mode. (OUTMOD_3 = set/reset, OUTMOD_7 = reset/set)
  */
-void timerInitPWMB0(int, unsigned int, double, unsigned int, unsigned int);
+void timerInitPWMB0(int, unsigned int, double, unsigned int);
 
 /*
  * @brief Method for changing the duty cycle of the timer A0 in PWM mode.
