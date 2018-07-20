@@ -4,18 +4,18 @@
 #include <IQmathLib.h>
 #include <lib/ADC.h>
 const int period = 2400;
-const double initDuty  = 0.07;
+const double initDuty  = 0.03;
 unsigned int calculate = 0;
 int count;
 int counter;
 double Ipeak;
 
-unsigned long power[10];
-unsigned long capDif[10];
-unsigned long timer[10];
-unsigned long uin[10];
-unsigned long capHigh[10];
-unsigned long capLow[10];
+unsigned long power[100];
+unsigned long capDif;
+unsigned long timer;
+unsigned long uin;
+unsigned long capHigh;
+unsigned long capLow;
 int i = 0;
 void init();
 unsigned long calculatePower();
@@ -47,18 +47,18 @@ void main(void)
         // count Up when no calculation is pending
         if(counter == 1){
             count ++;
-            if (count > 2){
+            if (count > 1){
                 counter = 0;
                 __delay_cycles(16000000);
                 power[i] = getPower();
-                capDif[i] = ADC12MEM0 - ADC12MEM1;
-                timer[i] = TA0CCR2;
-                uin[i] = ADC12MEM2;
-                capHigh[i] = ADC12MEM0;
-                capLow[i] = ADC12MEM1;
+                capDif = ADC12MEM0 - ADC12MEM1;
+                timer = TA0CCR2;
+                uin = ADC12MEM2;
+                capHigh = ADC12MEM0;
+                capLow = ADC12MEM1;
                 i ++;
                 _nop();
-                if(i == 10){
+                if(i == 100){
                 _nop();
                 _nop();
                 }

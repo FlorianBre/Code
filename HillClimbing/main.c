@@ -4,9 +4,10 @@
 #include <IQmathLib.h>
 #include <lib/ADC.h>
 const int period = 2400;
-const double initDuty  = 0.3;
+double duty  = 0.2;
 unsigned int calculate = 0;
-const double minimalStepSize =  0.001;
+const double minimalStepSize =  0.00125;
+//const double minimalStepSize =  0.000625;
 int count;
 int counter;
 long test;
@@ -21,7 +22,7 @@ long measuredPower;
 void init();
 unsigned long calculatePower();
 unsigned long getPower();
-double hillClimbing(double);
+double hillClimbing();
 /**
  * Pinout:
  * P2.1: PWM, Output
@@ -39,7 +40,6 @@ void main(void)
 {
 
     init();
-    dutyTest = initDuty;
     __delay_cycles(70000000);
     count = 0;
     counter = 1;
@@ -64,7 +64,7 @@ void init(){
     WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
     // PWM Timer
     // Set period cycles, clock select SMCLK, select duty, select outmode reset / set.
-    timerInitPWMB0(period, TASSEL_2, initDuty, OUTMOD_7);
+    timerInitPWMB0(period, TASSEL_2, duty, OUTMOD_7);
     // Timer for measuring Toff
     // clock select SMCLK, select Capture Compare input 0 (P1.5), triggered by rising edge, Interrupt enabled.
     //timerCaptureCompareA0(CCIS_0,TASSEL_2, CM_2);
@@ -132,11 +132,11 @@ unsigned long calculatePower() {
     return tmp  * ADC12MEM2;
 }
 
-double hillClimbing(double duty){
+double hillClimbing(){
     // Initial values for step size an duty cycle.
     int directionChange = 0;
     const unsigned long waitCycles = 16000000;
-    stepSize = 0.03;
+    stepSize = 0.04;
     direction = 1.0;
     //timerSetDutyCycleB0(duty);
     //__delay_cycles(waitCycles);
