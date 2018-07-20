@@ -14,33 +14,40 @@
 #define T_ON_B0 TB0CCR5
 #define T_ADD_B0 TB0CCR6
 #define T_PERIOD_B0 TB0CCR0
+#define T_PERIOD_A2 TA1CCR0
+#define T_PERIOD_A3 TA1CCR0
 
-void timerInitCounterA0(unsigned int clockSelect, unsigned int countMode){
+void timerInitCounterA0(unsigned int clockSelect, unsigned int countMode, unsigned int countValue){
+    T_PERIOD_A0 = countValue;
     TA0CTL = TACLR;
     TA0CTL |= clockSelect |  countMode;
 }
 
-void timerInitCounterA1(unsigned int clockSelect, unsigned int countMode){
+void timerInitCounterA1(unsigned int clockSelect, unsigned int countMode, unsigned int countValue){
+    T_PERIOD_A1 = countValue;
     TA1CTL = TACLR;
-    TA1CTL |= clockSelect |  countMode;
+    TA1CTL |= clockSelect |  countMode | TAIE;
 }
 
-void timerInitCounterA2(unsigned int clockSelect, unsigned int countMode ){
+void timerInitCounterA2(unsigned int clockSelect, unsigned int countMode, unsigned int countValue){
+    T_PERIOD_A2 = countValue;
     TA2CTL = TACLR;
     TA2CTL |= clockSelect | countMode;
 }
-void timerInitCounterA3(unsigned int clockSelect, unsigned int countMode ){
+void timerInitCounterA3(unsigned int clockSelect, unsigned int countMode, unsigned int countValue ){
+    T_PERIOD_A3 = countValue;
     TA3CTL = TACLR;
     TA3CTL |= clockSelect |  countMode;
 }
-void timerInitCounterB0(unsigned int clockSelect, unsigned int countMode){
+void timerInitCounterB0(unsigned int clockSelect, unsigned int countMode, unsigned int countValue){
+    T_PERIOD_B0 = countValue;
     TB0CTL = TACLR;
     TB0CTL = clockSelect |  countMode ;
 }
 
 void timerCaptureCompareA0(unsigned int captureCompareInput, unsigned int clockSelect, unsigned int edgeSelect){
     TA0CTL = TACLR; // Reset Timer
-    TA0CTL |= clockSelect |  MC_0 ; // Select timer clock source, Timer Stop.
+    TA0CTL = clockSelect |  MC_2 ; // Select timer clock source, Up mode.
     TA0CCTL0 |= CAP + edgeSelect + captureCompareInput + SCS + CCIE; // Capturemode on/off, Capture mode neg Edge, Capture input  (P1.5), Capture synchronus mode, capture interrupt enable
     // Select CCIOA (P1.5)
     if(captureCompareInput == CCIS_0 ){

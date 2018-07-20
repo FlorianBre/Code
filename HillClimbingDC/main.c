@@ -4,16 +4,22 @@
 #include <IQmathLib.h>
 #include <lib/ADC.h>
 const int period = 2400;
-const double initDuty  = 0.05;
+const double initDuty  = 0.07;
 unsigned int calculate = 0;
-unsigned long power;
 int count;
 int counter;
-long test;
 double Ipeak;
+
+unsigned long power[10];
+unsigned long capDif[10];
+unsigned long timer[10];
+unsigned long uin[10];
+unsigned long capHigh[10];
+unsigned long capLow[10];
+int i = 0;
 void init();
-long calculatePower();
-long getPower();
+unsigned long calculatePower();
+unsigned long getPower();
 
 /**
  * Pinout:
@@ -32,9 +38,10 @@ void main(void)
 {
 
     init();
-    __delay_cycles(100000);
+    __delay_cycles(16000000);
     count = 0;
     counter = 1;
+
     while(1){
 
         // count Up when no calculation is pending
@@ -42,9 +49,19 @@ void main(void)
             count ++;
             if (count > 2){
                 counter = 0;
-                __delay_cycles(10000);
-                test = getPower();
-
+                __delay_cycles(16000000);
+                power[i] = getPower();
+                capDif[i] = ADC12MEM0 - ADC12MEM1;
+                timer[i] = TA0CCR2;
+                uin[i] = ADC12MEM2;
+                capHigh[i] = ADC12MEM0;
+                capLow[i] = ADC12MEM1;
+                i ++;
+                _nop();
+                if(i == 10){
+                _nop();
+                _nop();
+                }
             }
         }
 
@@ -101,11 +118,10 @@ void init(){
     CSCTL1 =  DCORSEL | DCOFSEL_4; // Set DCO to high speed, select  16 MHz
     CSCTL3 = DIVM_0; // Divide MCLK by 0
     __enable_interrupt();
-    __delay_cycles(1000);
 }
 
 // Called after count value is reached.
-long getPower(){
+unsigned long getPower(){
     // ADC init start measurement
     P1OUT |= BIT3;
 
@@ -116,12 +132,13 @@ long getPower(){
     return calculatePower();
 }
 
-long calculatePower() {
+unsigned long calculatePower() {
     // Calculate Power Uin * Ucaphigh - Uin low * Tonoff
     _nop();
     calculate = 0;
     counter = 1;
-    return power = TA0CCR1 * (ADC12MEM0 - ADC12MEM1)  * ADC12MEM2;
+    long tmp = TA0CCR2 * (ADC12MEM0 - ADC12MEM1);
+    return tmp  * ADC12MEM2;
 }
 
 #if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)

@@ -4,17 +4,23 @@
 #include <IQmathLib.h>
 #include <lib/ADC.h>
 const int period = 2400;
-const double initDuty  = 0.05;
+const double initDuty  = 0.3;
 unsigned int calculate = 0;
 const double minimalStepSize =  0.001;
-unsigned long power;
 int count;
 int counter;
 long test;
 double Ipeak;
+
+double dutyTest;
+double stepSize;
+double direction;
+long currentPower;
+long measuredPower;
+
 void init();
-long calculatePower();
-long getPower();
+unsigned long calculatePower();
+unsigned long getPower();
 double hillClimbing(double);
 /**
  * Pinout:
@@ -33,19 +39,19 @@ void main(void)
 {
 
     init();
-    int duty = initDuty;
-    __delay_cycles(100000);
+    dutyTest = initDuty;
+    __delay_cycles(70000000);
     count = 0;
     counter = 1;
     while(1){
 
-        // count Up when no calculation is pending
         if(counter == 1){
             count ++;
-            __delay_cycles(10000);
             if (count > 2){
                 counter = 0;
-                duty = hillClimbing(duty);
+                __delay_cycles(10000);
+                dutyTest = hillClimbing(dutyTest);
+                _nop();
             }
         }
 
@@ -102,11 +108,11 @@ void init(){
     CSCTL1 =  DCORSEL | DCOFSEL_4; // Set DCO to high speed, select  16 MHz
     CSCTL3 = DIVM_0; // Divide MCLK by 0
     __enable_interrupt();
-    __delay_cycles(1000);
 }
 
 // Called after count value is reached.
-long getPower(){
+// Called after count value is reached.
+unsigned long getPower(){
     // ADC init start measurement
     P1OUT |= BIT3;
 
@@ -117,33 +123,36 @@ long getPower(){
     return calculatePower();
 }
 
-long calculatePower() {
+unsigned long calculatePower() {
     // Calculate Power Uin * Ucaphigh - Uin low * Tonoff
     _nop();
     calculate = 0;
     counter = 1;
-    return power = TA0CCR1 * (ADC12MEM0 - ADC12MEM1)  * ADC12MEM2;
+    long tmp = TA0CCR2 * (ADC12MEM0 - ADC12MEM1);
+    return tmp  * ADC12MEM2;
 }
 
 double hillClimbing(double duty){
     // Initial values for step size an duty cycle.
     int directionChange = 0;
-    const int waitCycles = 2*period;
-    int stepSize = 0.01;
-    int direction = 1.0;
-    long currentPower;
-    long measuredPower;
-    timerSetDutyCycleB0(duty);
-    __delay_cycles(waitCycles);
+    const unsigned long waitCycles = 16000000;
+    stepSize = 0.03;
+    direction = 1.0;
+    //timerSetDutyCycleB0(duty);
+    //__delay_cycles(waitCycles);
     currentPower = getPower();
+    _nop();
+
     // Terminate when the minimal step size is reached.
     while(stepSize > minimalStepSize){
         // Calculate the new duty cycle.
         duty += direction * stepSize;
 
         timerSetDutyCycleB0(duty);
+        _nop();
         __delay_cycles(waitCycles);
         measuredPower = getPower();
+        _nop();
         // When the power at the new duty cycle is smaller than at the former duty cycle.
         if(measuredPower < currentPower) {
             // Change direction of the Hill climb and register the direction change

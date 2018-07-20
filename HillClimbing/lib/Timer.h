@@ -11,36 +11,41 @@
  * @brief Method for initializing timer A0
  * @param clockSelect: Select timer clock (TASSEL_X)
  *        countMode: Select the timer count mode (MC_X).
+ *        countVal: Select TAxCCR0 value.
  */
-void timerInitCounterA0(unsigned int, unsigned int);
+void timerInitCounterA0(unsigned int, unsigned int, unsigned int);
 
 /*
  * @brief Method for initializing timer A1
  * @param clockSelect: Select timer clock (TASSEL_X)
  *        countMode: Select the timer count mode (MC_X).
+ *        countVal: Select TAxCCR0 value.
  */
-void timerInitCounterA1(unsigned int, unsigned int);
+void timerInitCounterA1(unsigned int, unsigned int, unsigned int);
 
 /*
  * @brief Method for initializing timer A2.
  * @param clockSelect: Select timer clock (TASSEL_X).
  *        countMode: Select the timer count mode (MC_X).
+ *        countVal: Select TAxCCR0 value.
  */
-void timerInitCounterA2(unsigned int, unsigned int);
+void timerInitCounterA2(unsigned int, unsigned int, unsigned int);
 
 /*
  * @brief Method for initializing timer A3
  * @param clockSelect: Select timer clock (TASSEL_X).
  *        countMode: Select the timer count mode (MC_X).
+ *        countVal: Select TAxCCR0 value.
  */
-void timerInitCounterA3(unsigned int, unsigned int);
+void timerInitCounterA3(unsigned int, unsigned int, unsigned int);
 
 /*
  * @brief Method for initializing timer B0
  * @param clockSelect: Select timer clock (TASSEL_X)
  *        countMode: Select the timer count mode (MC_X).
+ *        countVal: Select TAxCCR0 value.
  */
-void timerInitCounterB0(unsigned int, unsigned int);
+void timerInitCounterB0(unsigned int, unsigned int, unsigned int);
 
 /*
  * @brief Method for initializing timer A0 in Capture Compare Mode
