@@ -66,7 +66,7 @@ void init(){
     PM5CTL0 &= ~LOCKLPM5;
     WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
     // Timer For Waking Up MSP430 for Power Measurement.
-    timerInitPWMB0(wakeUpTime, TASSEL_3, 0, OUTMOD_2);
+    timerInitPWMB0(wakeUpTime, TASSEL_3, 0, OUTMOD_0);
     // Timer for measuring Toff
     // clock select SMCLK, select Capture Compare input 0 (P1.5), triggered by rising edge, Interrupt enabled.
     //timerCaptureCompareA0(CCIS_0,TASSEL_2, CM_2);
