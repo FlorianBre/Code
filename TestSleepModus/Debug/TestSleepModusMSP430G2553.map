@@ -1,7 +1,7 @@
 ******************************************************************************
-                  MSP430 Linker PC v17.9.0                     
+                  MSP430 Linker PC v18.1.2                     
 ******************************************************************************
->> Linked Tue May 29 15:06:59 2018
+>> Linked Fri Jul 20 17:08:47 2018
 
 OUTPUT FILE NAME:   <TestSleepModusMSP430G2553.out>
 ENTRY POINT SYMBOL: "_c_int00_noinit_noargs"  address: 0000c084
@@ -45,7 +45,7 @@ SECTION ALLOCATION MAP
 section   page    origin      length       input sections
 --------  ----  ----------  ----------   ----------------
 .stack     0    000003b0    00000050     UNINITIALIZED
-                  000003b0    00000002     rts430_eabi.lib : boot.obj (.stack)
+                  000003b0    00000002     rts430_eabi.lib : boot.c.obj (.stack)
                   000003b2    0000004e     --HOLE--
 
 .text      0    0000c000    000000aa     
@@ -53,10 +53,10 @@ section   page    origin      length       input sections
                   0000c030    0000001e     main.obj (.text:Port_1)
                   0000c04e    0000001e     main.obj (.text:main)
                   0000c06c    00000018     main.obj (.text:Timer_A)
-                  0000c084    00000014     rts430_eabi.lib : boot.obj (.text:_c_int00_noinit_noargs)
-                  0000c098    00000008                     : isr_trap.obj (.text:_isr:__TI_ISR_TRAP)
-                  0000c0a0    00000006                     : exit.obj (.text:abort)
-                  0000c0a6    00000004                     : pre_init.obj (.text:_system_pre_init)
+                  0000c084    00000014     rts430_eabi.lib : boot.c.obj (.text:_c_int00_noinit_noargs)
+                  0000c098    00000008                     : isr_trap.asm.obj (.text:_isr:__TI_ISR_TRAP)
+                  0000c0a0    00000006                     : exit.c.obj (.text:abort)
+                  0000c0a6    00000004                     : pre_init.c.obj (.text:_system_pre_init)
 
 .cinit     0    0000c000    00000000     UNINITIALIZED
 
@@ -66,88 +66,88 @@ section   page    origin      length       input sections
 *          0    0000c000    00000000     UNINITIALIZED
 
 TRAPINT    0    0000ffe0    00000002     
-                  0000ffe0    00000002     rts430_eabi.lib : int00.obj (.int00)
+                  0000ffe0    00000002     rts430_eabi.lib : int00.asm.obj (.int00)
 
 PORT1      0    0000ffe4    00000002     
                   0000ffe4    00000002     main.obj (.int02)
 
 PORT2      0    0000ffe6    00000002     
-                  0000ffe6    00000002     rts430_eabi.lib : int03.obj (.int03)
+                  0000ffe6    00000002     rts430_eabi.lib : int03.asm.obj (.int03)
 
 ADC10      0    0000ffea    00000002     
-                  0000ffea    00000002     rts430_eabi.lib : int05.obj (.int05)
+                  0000ffea    00000002     rts430_eabi.lib : int05.asm.obj (.int05)
 
 USCIAB0TX 
 *          0    0000ffec    00000002     
-                  0000ffec    00000002     rts430_eabi.lib : int06.obj (.int06)
+                  0000ffec    00000002     rts430_eabi.lib : int06.asm.obj (.int06)
 
 USCIAB0RX 
 *          0    0000ffee    00000002     
-                  0000ffee    00000002     rts430_eabi.lib : int07.obj (.int07)
+                  0000ffee    00000002     rts430_eabi.lib : int07.asm.obj (.int07)
 
 TIMER0_A1 
 *          0    0000fff0    00000002     
-                  0000fff0    00000002     rts430_eabi.lib : int08.obj (.int08)
+                  0000fff0    00000002     rts430_eabi.lib : int08.asm.obj (.int08)
 
 TIMER0_A0 
 *          0    0000fff2    00000002     
                   0000fff2    00000002     main.obj (.int09)
 
 WDT        0    0000fff4    00000002     
-                  0000fff4    00000002     rts430_eabi.lib : int10.obj (.int10)
+                  0000fff4    00000002     rts430_eabi.lib : int10.asm.obj (.int10)
 
 COMPARATORA 
 *          0    0000fff6    00000002     
-                  0000fff6    00000002     rts430_eabi.lib : int11.obj (.int11)
+                  0000fff6    00000002     rts430_eabi.lib : int11.asm.obj (.int11)
 
 TIMER1_A1 
 *          0    0000fff8    00000002     
-                  0000fff8    00000002     rts430_eabi.lib : int12.obj (.int12)
+                  0000fff8    00000002     rts430_eabi.lib : int12.asm.obj (.int12)
 
 TIMER1_A0 
 *          0    0000fffa    00000002     
-                  0000fffa    00000002     rts430_eabi.lib : int13.obj (.int13)
+                  0000fffa    00000002     rts430_eabi.lib : int13.asm.obj (.int13)
 
 NMI        0    0000fffc    00000002     
-                  0000fffc    00000002     rts430_eabi.lib : int14.obj (.int14)
+                  0000fffc    00000002     rts430_eabi.lib : int14.asm.obj (.int14)
 
 .reset     0    0000fffe    00000002     
-                  0000fffe    00000002     rts430_eabi.lib : boot.obj (.reset)
+                  0000fffe    00000002     rts430_eabi.lib : boot.c.obj (.reset)
 
 $fill000   0    0000ffde    00000002     
                   0000ffde    00000002     --HOLE-- [fill = ffff]
 
 MODULE SUMMARY
 
-       Module         code   ro data   rw data
-       ------         ----   -------   -------
+       Module             code   ro data   rw data
+       ------             ----   -------   -------
     .\
-       main.obj       132    4         0      
-    +--+--------------+------+---------+---------+
-       Total:         132    4         0      
-                                              
-    C:\ti\ccsv7\tools\compiler\ti-cgt-msp430_17.9.0.STS\lib\rts430_eabi.lib
-       boot.obj       20     2         0      
-       isr_trap.obj   8      0         0      
-       exit.obj       6      0         0      
-       pre_init.obj   4      0         0      
-       int00.obj      0      2         0      
-       int03.obj      0      2         0      
-       int05.obj      0      2         0      
-       int06.obj      0      2         0      
-       int07.obj      0      2         0      
-       int08.obj      0      2         0      
-       int10.obj      0      2         0      
-       int11.obj      0      2         0      
-       int12.obj      0      2         0      
-       int13.obj      0      2         0      
-       int14.obj      0      2         0      
-    +--+--------------+------+---------+---------+
-       Total:         38     24        0      
-                                              
-       Stack:         0      0         80     
-    +--+--------------+------+---------+---------+
-       Grand Total:   170    28        80     
+       main.obj           132    4         0      
+    +--+------------------+------+---------+---------+
+       Total:             132    4         0      
+                                                  
+    C:\ti\ccsv8\tools\compiler\ti-cgt-msp430_18.1.2.LTS\lib\rts430_eabi.lib
+       boot.c.obj         20     2         0      
+       isr_trap.asm.obj   8      0         0      
+       exit.c.obj         6      0         0      
+       pre_init.c.obj     4      0         0      
+       int00.asm.obj      0      2         0      
+       int03.asm.obj      0      2         0      
+       int05.asm.obj      0      2         0      
+       int06.asm.obj      0      2         0      
+       int07.asm.obj      0      2         0      
+       int08.asm.obj      0      2         0      
+       int10.asm.obj      0      2         0      
+       int11.asm.obj      0      2         0      
+       int12.asm.obj      0      2         0      
+       int13.asm.obj      0      2         0      
+       int14.asm.obj      0      2         0      
+    +--+------------------+------+---------+---------+
+       Total:             38     24        0      
+                                                  
+       Stack:             0      0         80     
+    +--+------------------+------+---------+---------+
+       Grand Total:       170    28        80     
 
 
 GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 

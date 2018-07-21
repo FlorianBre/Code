@@ -1,7 +1,7 @@
 ******************************************************************************
-                  MSP430 Linker PC v18.1.1                     
+                  MSP430 Linker PC v18.1.2                     
 ******************************************************************************
->> Linked Fri Jun 22 16:27:31 2018
+>> Linked Fri Jul 20 17:08:23 2018
 
 OUTPUT FILE NAME:   <TestEnergyConsumptionMSP430F5529.out>
 ENTRY POINT SYMBOL: "_c_int00_noinit_noargs"  address: 0000441a
@@ -204,7 +204,7 @@ MODULE SUMMARY
     +--+------------------+------+---------+---------+
        Total:             238    4         0      
                                                   
-    C:\ti\ccsv7\tools\compiler\ti-cgt-msp430_18.1.1.LTS\lib\rts430x_lc_rd_eabi.lib
+    C:\ti\ccsv8\tools\compiler\ti-cgt-msp430_18.1.2.LTS\lib\rts430x_lc_rd_eabi.lib
        boot.c.obj         20     2         0      
        isr_trap.asm.obj   8      0         0      
        exit.c.obj         6      0         0      

@@ -1,7 +1,7 @@
 ******************************************************************************
-                  MSP430 Linker PC v18.1.1                     
+                  MSP430 Linker PC v18.1.2                     
 ******************************************************************************
->> Linked Mon Jun 25 15:56:39 2018
+>> Linked Fri Jul 20 17:08:43 2018
 
 OUTPUT FILE NAME:   <TestSampleHold.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs_mpu"  address: 0000446c
@@ -290,12 +290,12 @@ MODULE SUMMARY
     +--+----------------------------+------+---------+---------+
        Total:                       254    0         0      
                                                             
-    C:\ti\ccsv7\ccs_base\msp430\lib\FR59xx\MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib
+    C:\ti\ccsv8\ccs_base\msp430\lib\FR59xx\MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib
        mpu_init.o                   44     0         0      
     +--+----------------------------+------+---------+---------+
        Total:                       44     0         0      
                                                             
-    C:\ti\ccsv7\tools\compiler\ti-cgt-msp430_18.1.1.LTS\lib\rts430x_lc_rd_eabi.lib
+    C:\ti\ccsv8\tools\compiler\ti-cgt-msp430_18.1.2.LTS\lib\rts430x_lc_rd_eabi.lib
        addd.c.obj                   736    0         0      
        frcmpyd.c.obj                640    0         0      
        mpyd.c.obj                   614    0         0      

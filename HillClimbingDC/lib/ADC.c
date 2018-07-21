@@ -41,7 +41,7 @@ void adcInitSequence(unsigned int clockSelect,unsigned int differentialModeSelec
     // Initialize the memory controll
     for(i = 0; i <= sequenceLength; i++){
         unsigned int tmp = startChannel+i;
-        *(&ADC12MCTL0+i) = tmp | refSelect | differentialModeSelect;
+        *(&ADC12MCTL0+i) = tmp;
         configureChannel(tmp);
     }
     *(&ADC12MCTL0+i-1) |=   ADC12EOS;

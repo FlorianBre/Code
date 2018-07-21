@@ -1,7 +1,7 @@
 ******************************************************************************
                   MSP430 Linker PC v18.1.2                     
 ******************************************************************************
->> Linked Tue Jul 17 22:17:36 2018
+>> Linked Fri Jul 20 17:08:21 2018
 
 OUTPUT FILE NAME:   <TestEnergyConsumption.out>
 ENTRY POINT SYMBOL: "_c_int00_noinit_noargs_mpu"  address: 0000441a

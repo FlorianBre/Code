@@ -14,40 +14,33 @@
 #define T_ON_B0 TB0CCR5
 #define T_ADD_B0 TB0CCR6
 #define T_PERIOD_B0 TB0CCR0
-#define T_PERIOD_A2 TA1CCR0
-#define T_PERIOD_A3 TA1CCR0
 
-void timerInitCounterA0(unsigned int clockSelect, unsigned int countMode, unsigned int countValue){
-    T_PERIOD_A0 = countValue;
+void timerInitCounterA0(unsigned int clockSelect, unsigned int countMode){
     TA0CTL = TACLR;
     TA0CTL |= clockSelect |  countMode;
 }
 
-void timerInitCounterA1(unsigned int clockSelect, unsigned int countMode, unsigned int countValue){
-    T_PERIOD_A1 = countValue;
+void timerInitCounterA1(unsigned int clockSelect, unsigned int countMode){
     TA1CTL = TACLR;
-    TA1CTL |= clockSelect |  countMode | TAIE;
+    TA1CTL |= clockSelect |  countMode;
 }
 
-void timerInitCounterA2(unsigned int clockSelect, unsigned int countMode, unsigned int countValue){
-    T_PERIOD_A2 = countValue;
+void timerInitCounterA2(unsigned int clockSelect, unsigned int countMode ){
     TA2CTL = TACLR;
     TA2CTL |= clockSelect | countMode;
 }
-void timerInitCounterA3(unsigned int clockSelect, unsigned int countMode, unsigned int countValue ){
-    T_PERIOD_A3 = countValue;
+void timerInitCounterA3(unsigned int clockSelect, unsigned int countMode ){
     TA3CTL = TACLR;
     TA3CTL |= clockSelect |  countMode;
 }
-void timerInitCounterB0(unsigned int clockSelect, unsigned int countMode, unsigned int countValue){
-    T_PERIOD_B0 = countValue;
+void timerInitCounterB0(unsigned int clockSelect, unsigned int countMode){
     TB0CTL = TACLR;
     TB0CTL = clockSelect |  countMode ;
 }
 
 void timerCaptureCompareA0(unsigned int captureCompareInput, unsigned int clockSelect, unsigned int edgeSelect){
     TA0CTL = TACLR; // Reset Timer
-    TA0CTL = clockSelect |  MC_2 ; // Select timer clock source, Up mode.
+    TA0CTL |= clockSelect |  MC_0 ; // Select timer clock source, Timer Stop.
     TA0CCTL0 |= CAP + edgeSelect + captureCompareInput + SCS + CCIE; // Capturemode on/off, Capture mode neg Edge, Capture input  (P1.5), Capture synchronus mode, capture interrupt enable
     // Select CCIOA (P1.5)
     if(captureCompareInput == CCIS_0 ){
@@ -108,11 +101,13 @@ void timerInitPWMA0(int periodCycles, unsigned int clockSelect, double dutyCycle
         TA0CTL |= TACLR; // Reset Timer.
         TA0CTL |= clockSelect | MC_1; // Select timer clock source,Count up to the value in TA0CCR0.
         TA0CCTL1 |= pwmOutputMode; // Select output mode.
-        // configure Pin Functions.
+        // configure Ports as CC Output
+        if(pwmOutputMode > OUTMOD_0){
         P1DIR |= BIT6 | BIT0;
         P1SEL0 |= BIT6 | BIT0;
         P1SEL1 &= ~BIT0;
         P1SEL1 |= BIT6;
+        }
         timerSetDutyCycleA0(dutyCycle);
 
     }
@@ -127,12 +122,14 @@ void timerInitPWMA0(int periodCycles, unsigned int clockSelect, double dutyCycle
             TA1CTL |= TACLR;
             TA1CTL |= clockSelect | MC_1;
             TA1CCTL1 |= pwmOutputMode;
+            if(pwmOutputMode > OUTMOD_0){
             P1DIR |= BIT2;
             P3DIR |= BIT3;
             P1SEL0 |= BIT2;
             P1SEL1 &= ~BIT2;
             P3SEL0 &= ~BIT3;
             P3SEL1 &= ~BIT3;
+            }
             timerSetDutyCycleA1(dutyCycle);
 
         }
@@ -142,15 +139,17 @@ void timerInitPWMA0(int periodCycles, unsigned int clockSelect, double dutyCycle
 
         void timerInitPWMB0(int periodCycles, unsigned int clockSelect, double dutyCycle, unsigned int pwmOutputMode) {
                 T_PERIOD_B0 = periodCycles;
-                TB0CTL |= TACLR; // Reset Timer
-                TB0CTL |= clockSelect | MC_1; // Select timer clock source,Count up to the value in TB0CCR0.
-                TB0CCTL5 |= pwmOutputMode; // Select output mode.
+                TB0CTL |= TACLR;
+                TB0CTL |= clockSelect | MC_1;
+                TB0CCTL5 |= pwmOutputMode;
+                if(pwmOutputMode > OUTMOD_0){
                 P2DIR |= BIT0;
                 P2SEL0 &= ~BIT0;
                 P2SEL1 |= BIT0;
                 P2DIR |= BIT1;
                 P2SEL0 &= ~BIT1;
                 P2SEL1 |= BIT1;
+                }
                 timerSetDutyCycleB0(dutyCycle);
 
             }
