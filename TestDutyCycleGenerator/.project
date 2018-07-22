@@ -30,10 +30,5 @@
 			<type>1</type>
 			<location>C:/ti/msp430/IQMATHLIB_01_10_00_05/libraries/CCS/MPY32/5xx_6xx/IQmathLib.a</location>
 		</link>
-		<link>
-			<name>IQmathLib.h</name>
-			<type>1</type>
-			<locationURI>PARENT-4-PROJECT_LOC/ti/msp430/IQMATHLIB_01_10_00_05/include/IQmathLib.h</locationURI>
-		</link>
 	</linkedResources>
 </projectDescription>

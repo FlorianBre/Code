@@ -35,6 +35,7 @@ void adcInitSequence(unsigned int clockSelect,unsigned int differentialModeSelec
     // Select SHT, Turn ADC on, Enable ADC
     // select pulse sample mode, select clock source, select trigger source, select sequence of channels mode.
     ADC12CTL1 = ADC12SHP | clockSelect | triggerSelect | ADC12CONSEQ_1;
+    ADC12IER0 = ADC12IE2;
     int sequenceLength = endChannel - startChannel;
     int i;
     // Initialize the memory controll

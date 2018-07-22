@@ -78,7 +78,7 @@ void init(){
     // Timer for measuring Toff
     // clock select SMCLK, select Capture Compare input 0 (P1.5), triggered by rising edge, Interrupt enabled.
     //timerCaptureCompareA0(CCIS_0,TASSEL_2, CM_2);
-    TA0CTL |= TASSEL_2 |  MC_2; // Select ACLK as timer clock source, Up mode, TB start.
+    TA0CTL |= TASSEL_2 |  MC_0; // Select ACLK as timer clock source, Up mode, TB start.
     TA0CCTL2 |= CAP | CM_1 | CCIS_0 | SCS; // Capturemode on/off, Capture mode pos Edge, Capture input CCI2A (P1.5), Capture synchronus mode, capture interrupt enable
     P1REN |= BIT7;
     P1OUT &= ~BIT7;
@@ -167,7 +167,8 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
         ADC12IFGR0 &= ~ADC12IFG1;
         // Reset SH circuit
         P1OUT &= ~BIT3;
-
+        // Start Counter for measuring Toff
+        TA0CTL = TASSEL_2 |  MC_2;
         P1IE |= BIT6;   // P1.6 interrupt enabled
         break;        // Vector 14:  ADC12MEM1
     case ADC12IV_ADC12IFG2:   break;        // Vector 16:  ADC12MEM2
@@ -263,7 +264,8 @@ void __attribute__ ((interrupt(TIMER0_A1_VECTOR))) TIMER0_A1_ISR (void)
         P4OUT ^= BIT7;
         // Stop Capture Compare Mode
         TA0CCTL2 = 0;
-
+        // Stop Counter
+        TA0CTL = 0;
         // Set flag for starting the calculation of the power.
         calculate = 1;
         break;              // TA0CCR2 interrupt

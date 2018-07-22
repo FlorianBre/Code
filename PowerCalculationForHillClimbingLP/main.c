@@ -24,7 +24,7 @@ unsigned long getPower();
 
 /**
  * Pinout:
- * P2.1: PWM, Output
+ * P3.3: Input, Trigger For Wakeup Timer.
  * P1.3: ADCinit Input, Port Interrupt (Control Signal to start SH circuit, Set High to start)
  * P1.4: Sample Hold ready Input (Control Input Signal, high when SH circuit is ready for ADC mesasurement)
  * P1.7: Capture Compare Input store timer Value in CCR2 timer A0 (measure T_off)
@@ -67,10 +67,19 @@ void init(){
     WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
     // Timer For Waking Up MSP430 for Power Measurement.
     timerInitPWMB0(wakeUpTime, TASSEL_3, 0, OUTMOD_0);
+    // Enable Capture Compare Interrupt
+    TB0CTL |= TBIE;
+    TB0CCTL0 = CCIE;
+    // Configure Pin as TB0 Trigger
+    P3DIR &= ~BIT3;
+    P3SEL1 = BIT3;
+    P3SEL0 = BIT3;
+
+
     // Timer for measuring Toff
     // clock select SMCLK, select Capture Compare input 0 (P1.5), triggered by rising edge, Interrupt enabled.
     //timerCaptureCompareA0(CCIS_0,TASSEL_2, CM_2);
-    TA0CTL |= TASSEL_2 |  MC_2; // Select ACLK as timer clock source, Up mode, TB start.
+    TA0CTL |= TASSEL_2 |  MC_0; // Select ACLK as timer clock source, Up mode, TB start.
     TA0CCTL2 |= CAP | CM_1 | CCIS_0 | SCS; // Capturemode on/off, Capture mode pos Edge, Capture input CCI2A (P1.5), Capture synchronus mode, capture interrupt enable
     P1REN |= BIT7;
     P1OUT &= ~BIT7;
@@ -95,7 +104,7 @@ void init(){
 
 
     // init ADCSequence Pin P9.0,P9.1,P9.2.
-    adcInitSequence(ADC12SSEL_3, 0, ADC12SHT0_0, ADC12VRSEL_0, 0, 0, ADC12SHS_0, ADC12INCH_8,  ADC12INCH_10);
+    adcInitSequence(ADC12SSEL_2, 0, ADC12SHT0_0, ADC12VRSEL_0, 0, 0, ADC12SHS_0, ADC12INCH_8,  ADC12INCH_10);
     REFCTL0 |= REFON | REFVSEL_2;   // Turn on internal Reference Generator, select Reference
     while( REFCTL0 & REFGENBUSY){ };    // Wait for refernce to settle
     ADC12MCTL0 |= ADC12VRSEL_1;
@@ -122,7 +131,7 @@ void init(){
 unsigned long getPower(){
     // ADC init start measurement
     P1OUT |= BIT3;
-
+    __bis_SR_register(LPM3_bits + GIE);
     while(calculate == 0){
         _nop();
     }
@@ -165,8 +174,9 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
         ADC12IFGR0 &= ~ADC12IFG1;
         // Reset SH circuit
         P1OUT &= ~BIT3;
-
+        TA0CTL = TASSEL_2 |  MC_2;
         P1IE |= BIT6;   // P1.6 interrupt enabled
+        __bic_SR_register_on_exit(LPM3_bits);
         break;        // Vector 14:  ADC12MEM1
     case ADC12IV_ADC12IFG2:   break;        // Vector 16:  ADC12MEM2
     case ADC12IV_ADC12IFG3:   break;        // Vector 18:  ADC12MEM3
@@ -261,7 +271,8 @@ void __attribute__ ((interrupt(TIMER0_A1_VECTOR))) TIMER0_A1_ISR (void)
         P4OUT ^= BIT7;
         // Stop Capture Compare Mode
         TA0CCTL2 = 0;
-
+        // Stop Counter
+                TA0CTL = 0;
         // Set flag for starting the calculation of the power.
         calculate = 1;
         break;              // TA0CCR2 interrupt
@@ -270,5 +281,37 @@ void __attribute__ ((interrupt(TIMER0_A1_VECTOR))) TIMER0_A1_ISR (void)
     default: break;
     }
 }
+
+#if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
+#pragma vector=TIMER0_B0_VECTOR
+__interrupt void TIMER0_B0_ISR(void)
+#elif defined(__GNUC__)
+void __attribute__ ((interrupt(TIMER0_B0_VECTOR))) TIMER0_B0_ISR (void)
+#else
+#error Compiler not supported!
+#endif
+{
+    _nop();
+    switch(__even_in_range(TB0IV,TB0IV_TBIFG))
+    {
+    case TB0IV_NONE:
+        TB0R = 0;
+        __bic_SR_register_on_exit(LPM3_bits); // Clear LPM bits upon ISR Exit
+
+        _nop();
+        break;                              // No interrupt
+    case TB0IV_TB0CCR1: break;              // TA0CCR1 interrupt
+    default: break;
+    }
+}
+
+
+
+
+
+
+
+
+
 
 

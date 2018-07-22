@@ -40,7 +40,7 @@ void timerInitCounterB0(unsigned int clockSelect, unsigned int countMode){
 
 void timerCaptureCompareA0(unsigned int captureCompareInput, unsigned int clockSelect, unsigned int edgeSelect){
     TA0CTL = TACLR; // Reset Timer
-    TA0CTL |= clockSelect |  MC_0 ; // Select timer clock source, Timer Stop.
+    TA0CTL |= clockSelect |  MC_2 ; // Select timer clock source, Timer Stop.
     TA0CCTL0 |= CAP + edgeSelect + captureCompareInput + SCS + CCIE; // Capturemode on/off, Capture mode neg Edge, Capture input  (P1.5), Capture synchronus mode, capture interrupt enable
     // Select CCIOA (P1.5)
     if(captureCompareInput == CCIS_0 ){
