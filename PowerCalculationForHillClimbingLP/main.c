@@ -75,7 +75,6 @@ void init(){
     P3SEL1 = BIT3;
     P3SEL0 = BIT3;
 
-
     // Timer for measuring Toff
     // clock select SMCLK, select Capture Compare input 0 (P1.5), triggered by rising edge, Interrupt enabled.
     //timerCaptureCompareA0(CCIS_0,TASSEL_2, CM_2);
@@ -104,11 +103,11 @@ void init(){
 
 
     // init ADCSequence Pin P9.0,P9.1,P9.2.
-    adcInitSequence(ADC12SSEL_2, 0, ADC12SHT0_0, ADC12VRSEL_0, 0, 0, ADC12SHS_0, ADC12INCH_8,  ADC12INCH_10);
-    REFCTL0 |= REFON | REFVSEL_2;   // Turn on internal Reference Generator, select Reference
-    while( REFCTL0 & REFGENBUSY){ };    // Wait for refernce to settle
-    ADC12MCTL0 |= ADC12VRSEL_1;
-    ADC12MCTL1 |= ADC12VRSEL_1;
+    adcInitSequence(ADC12SSEL_0, 0, ADC12SHT0_0, ADC12VRSEL_0, 0, 0, ADC12SHS_0, ADC12INCH_8,  ADC12INCH_10);
+    //REFCTL0 |= REFON | REFVSEL_2;   // Turn on internal Reference Generator, select Reference
+    //while( REFCTL0 & REFGENBUSY){ };    // Wait for refernce to settle
+    //ADC12MCTL0 |= ADC12VRSEL_1;
+    //ADC12MCTL1 |= ADC12VRSEL_1;
     P9SEL0 |= BIT0;
     P9SEL1 |= BIT0;
     P9SEL0 |= BIT1;
@@ -169,16 +168,18 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
     case ADC12IV_ADC12IFG0:                 // Vector 12:  ADC12MEM0 Interrupt
         break;
     case ADC12IV_ADC12IFG1:
+        break;        // Vector 14:  ADC12MEM1
+    case ADC12IV_ADC12IFG2:
         // Reset interrupt Flag
         P1IFG = 0x00;
-        ADC12IFGR0 &= ~ADC12IFG1;
+        ADC12IFGR0 &= ~ADC12IFG2;
         // Reset SH circuit
         P1OUT &= ~BIT3;
         TA0CTL = TASSEL_2 |  MC_2;
         P1IE |= BIT6;   // P1.6 interrupt enabled
+        _nop();
         __bic_SR_register_on_exit(LPM3_bits);
-        break;        // Vector 14:  ADC12MEM1
-    case ADC12IV_ADC12IFG2:   break;        // Vector 16:  ADC12MEM2
+        break;        // Vector 16:  ADC12MEM2
     case ADC12IV_ADC12IFG3:   break;        // Vector 18:  ADC12MEM3
     case ADC12IV_ADC12IFG4:   break;        // Vector 20:  ADC12MEM4
     case ADC12IV_ADC12IFG5:   break;        // Vector 22:  ADC12MEM5
@@ -272,7 +273,7 @@ void __attribute__ ((interrupt(TIMER0_A1_VECTOR))) TIMER0_A1_ISR (void)
         // Stop Capture Compare Mode
         TA0CCTL2 = 0;
         // Stop Counter
-                TA0CTL = 0;
+        TA0CTL = 0;
         // Set flag for starting the calculation of the power.
         calculate = 1;
         break;              // TA0CCR2 interrupt
@@ -296,7 +297,7 @@ void __attribute__ ((interrupt(TIMER0_B0_VECTOR))) TIMER0_B0_ISR (void)
     {
     case TB0IV_NONE:
         TB0R = 0;
-        __bic_SR_register_on_exit(LPM3_bits); // Clear LPM bits upon ISR Exit
+        __bic_SR_register_on_exit(LPM4_bits); // Clear LPM bits upon ISR Exit
 
         _nop();
         break;                              // No interrupt

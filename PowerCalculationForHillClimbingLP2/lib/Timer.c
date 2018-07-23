@@ -143,9 +143,9 @@ void timerInitPWMA0(int periodCycles, unsigned int clockSelect, double dutyCycle
                 TB0CTL |= clockSelect | MC_1;
                 TB0CCTL5 |= pwmOutputMode;
                 if(pwmOutputMode > OUTMOD_0){
-                P2DIR |= BIT0;
-                P2SEL0 &= ~BIT0;
-                P2SEL1 |= BIT0;
+                //P2DIR |= BIT0;
+                //P2SEL0 &= ~BIT0;
+                //P2SEL1 |= BIT0;
                 P2DIR |= BIT1;
                 P2SEL0 &= ~BIT1;
                 P2SEL1 |= BIT1;

@@ -4,7 +4,7 @@
 #include <IQmathLib.h>
 #include <lib/ADC.h>
 const int period = 2400;
-const double initDuty  = 0.03;
+const double initDuty  = 0.045;
 unsigned int calculate = 0;
 int count;
 int counter;
@@ -79,7 +79,7 @@ void init(){
     // clock select SMCLK, select Capture Compare input 0 (P1.5), triggered by rising edge, Interrupt enabled.
     //timerCaptureCompareA0(CCIS_0,TASSEL_2, CM_2);
     TA0CTL |= TASSEL_2 |  MC_0; // Select ACLK as timer clock source, Up mode, TB start.
-    TA0CCTL2 |= CAP | CM_1 | CCIS_0 | SCS; // Capturemode on/off, Capture mode pos Edge, Capture input CCI2A (P1.5), Capture synchronus mode, capture interrupt enable
+    TA0CCTL2 |= CAP | CCIS_0 | SCS; // Capturemode on/off, Capture mode pos Edge, Capture input CCI2A (P1.5), Capture synchronus mode, capture interrupt enable
     P1REN |= BIT7;
     P1OUT &= ~BIT7;
     // Select Capture Compare Function
