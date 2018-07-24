@@ -29,8 +29,7 @@ unsigned long getPower();
  * P1.7: Capture Compare Input store timer Value in CCR2 timer A0 (measure T_off)
  * P1.6: TimerStart, input (Starts timer A0 on a Rising Edge off PWM input Signal)
  * P4.7: Controll bit output, toggle bit for testing
- * P9.0: ADC1 input Ucaphigh
- * P9.1  ADC2 input Ucaplow
+ * P9.1  ADC2 input Ucap
  * P9.2  ADC3 input Uin
  */
 
@@ -47,7 +46,7 @@ void main(void)
         __bis_SR_register(LPM4_bits + GIE);
         _nop();
         power[i] = getPower();
-        capDif[i] = ADC12MEM0 - ADC12MEM1;
+        capDif[i] = ADC12MEM0;
         timer[i] = TA0CCR2;
         uin = ADC12MEM2;
         capHigh = ADC12MEM0;
@@ -98,13 +97,7 @@ void init(){
 
 
     // init ADCSequence Pin P9.0,P9.1,P9.2.
-    adcInitSequence(ADC12SSEL_1, 0, ADC12SHT0_0, ADC12VRSEL_0, 0, 0, ADC12SHS_0, ADC12INCH_8,  ADC12INCH_10);
-    //REFCTL0 |= REFON | REFVSEL_2;   // Turn on internal Reference Generator, select Reference
-    //while( REFCTL0 & REFGENBUSY){ };    // Wait for refernce to settle
-    //ADC12MCTL0 |= ADC12VRSEL_1;
-    //ADC12MCTL1 |= ADC12VRSEL_1;
-    P9SEL0 |= BIT0;
-    P9SEL1 |= BIT0;
+    adcInitSequence(ADC12SSEL_1, 0, ADC12SHT0_0, ADC12VRSEL_0, 0, 0, ADC12SHS_0, ADC12INCH_9,  ADC12INCH_10);
     P9SEL0 |= BIT1;
     P9SEL1 |= BIT1;
     P9SEL0 |= BIT2;
@@ -137,8 +130,8 @@ unsigned long calculatePower() {
     // Calculate Power Uin * Ucaphigh - Uin low * Tonoff
     _nop();
     calculate = 0;
-    long tmp = TA0CCR2 * (ADC12MEM0 - ADC12MEM1);
-    return tmp  * ADC12MEM2;
+    long tmp = TA0CCR2 * ADC12MEM0;
+    return tmp  * ADC12MEM1;
 }
 
 #if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
@@ -162,9 +155,6 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
     case ADC12IV_ADC12IFG0:                 // Vector 12:  ADC12MEM0 Interrupt
         break;
     case ADC12IV_ADC12IFG1:
-        _nop();
-        break;        // Vector 14:  ADC12MEM1
-    case ADC12IV_ADC12IFG2:
         // Reset interrupt Flag
         P1IFG = 0x00;
         ADC12IFGR0 = 0;
@@ -173,6 +163,10 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
         TA0CTL = TASSEL_2 |  MC_2;
         P1IE |= BIT6;   // P1.6 interrupt enabled
         _nop();
+        _nop();
+        break;        // Vector 14:  ADC12MEM1
+    case ADC12IV_ADC12IFG2:
+
         _nop();
 
         break;        // Vector 16:  ADC12MEM2
