@@ -4,7 +4,7 @@
 #include <IQmathLib.h>
 #include <lib/ADC.h>
 const int period = 2400;
-const int wakeUpTime = 1000;
+const int wakeUpTime = 10000;
 const double initDuty  = 0.045;
 unsigned int calculate = 0;
 int count;
@@ -25,7 +25,7 @@ unsigned long getPower();
 /**
  * Pinout:
  * P3.3: Input, Trigger For Wakeup Timer.
- * P1.3: ADCinit Input, Port Interrupt (Control Signal to start SH circuit, Set High to start)
+ * P1.3: ADCinit Output, (Control Signal to start SH circuit, Set High to start)
  * P1.4: Sample Hold ready Input (Control Input Signal, high when SH circuit is ready for ADC mesasurement)
  * P1.7: Capture Compare Input store timer Value in CCR2 timer A0 (measure T_off)
  * P1.6: TimerStart, input (Starts timer A0 on a Rising Edge off PWM input Signal)
@@ -93,7 +93,7 @@ void init(){
     P1DIR &= ~BIT4;
     P1IE |= BIT4;   // P1.4 interrupt enabled
     P1IES &= ~BIT4; // P1.4 lo/hi edge
-    // Port Interruot starting Timer
+    // Port Interrupt starting Timer
     P1DIR &= ~BIT6;
     P1IE &= ~BIT6;   // P1.6 interrupt disabled
     P1IES &= ~BIT6; // P1.6 lo/hi edge
@@ -103,7 +103,7 @@ void init(){
 
 
     // init ADCSequence Pin P9.0,P9.1,P9.2.
-    adcInitSequence(ADC12SSEL_0, 0, ADC12SHT0_0, ADC12VRSEL_0, 0, 0, ADC12SHS_0, ADC12INCH_8,  ADC12INCH_10);
+    adcInitSequence(ADC12SSEL_1, 0, ADC12SHT0_0, ADC12VRSEL_0, 0, 0, ADC12SHS_0, ADC12INCH_8,  ADC12INCH_10);
     //REFCTL0 |= REFON | REFVSEL_2;   // Turn on internal Reference Generator, select Reference
     //while( REFCTL0 & REFGENBUSY){ };    // Wait for refernce to settle
     //ADC12MCTL0 |= ADC12VRSEL_1;
@@ -128,9 +128,7 @@ void init(){
 
 // Called after count value is reached.
 unsigned long getPower(){
-    // ADC init start measurement
-    P1OUT |= BIT3;
-    __bis_SR_register(LPM3_bits + GIE);
+    adcMeasurementPolling();
     while(calculate == 0){
         _nop();
     }
@@ -175,10 +173,10 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
         ADC12IFGR0 &= ~ADC12IFG2;
         // Reset SH circuit
         P1OUT &= ~BIT3;
+       // P4OUT ^= BIT7;
         TA0CTL = TASSEL_2 |  MC_2;
         P1IE |= BIT6;   // P1.6 interrupt enabled
         _nop();
-        __bic_SR_register_on_exit(LPM3_bits);
         break;        // Vector 16:  ADC12MEM2
     case ADC12IV_ADC12IFG3:   break;        // Vector 18:  ADC12MEM3
     case ADC12IV_ADC12IFG4:   break;        // Vector 20:  ADC12MEM4
@@ -234,7 +232,8 @@ __interrupt void Port_1(void)
     // P1.4
     // Trigger ADC measurement when SH is ready (Output high)
     case  10:
-        adcMeasurementPolling();
+      //  P4OUT ^= BIT7;
+        __bic_SR_register_on_exit(LPM4_bits); // Clear LPM bits upon ISR Exit
         break;
         // P1.5
     case  12:break;
@@ -243,7 +242,7 @@ __interrupt void Port_1(void)
     case  P1IV_P1IFG6:
         TA0R = 0;
         TA0CCTL2 = CAP | CM_1 | CCIS_0 | SCS | CCIE;
-        P4OUT ^= BIT7;
+
         P1IE &= ~BIT6;   // Disable Interrupt.
         break;
     case  16: break;
@@ -269,7 +268,6 @@ void __attribute__ ((interrupt(TIMER0_A1_VECTOR))) TIMER0_A1_ISR (void)
     case TA0IV_TA0CCR1: break;              // TA0CCR1 interrupt
     case TA0IV_TA0CCR2:
         P1IFG = 0x00;
-        P4OUT ^= BIT7;
         // Stop Capture Compare Mode
         TA0CCTL2 = 0;
         // Stop Counter
@@ -297,8 +295,8 @@ void __attribute__ ((interrupt(TIMER0_B0_VECTOR))) TIMER0_B0_ISR (void)
     {
     case TB0IV_NONE:
         TB0R = 0;
-        __bic_SR_register_on_exit(LPM4_bits); // Clear LPM bits upon ISR Exit
-
+        // ADC init start measurement
+        P1OUT |= BIT3;
         _nop();
         break;                              // No interrupt
     case TB0IV_TB0CCR1: break;              // TA0CCR1 interrupt

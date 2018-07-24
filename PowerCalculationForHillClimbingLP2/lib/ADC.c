@@ -55,10 +55,12 @@ void adcInitSequence(unsigned int clockSelect,unsigned int differentialModeSelec
 
 int adcMeasurementPolling(){
     adcStartMeasurement();
+    _nop();
     // Poll busy bit waiting for conversion to complete
     while (ADC12CTL1 & ADC12BUSY) { }
     return ADC12MEM0 & 0x0FFF;             // Read in lower 12 bits.
 }
+
 void adcMeasurementInterrupt() {
     adcStartMeasurement();
     __bis_SR_register(LPM3_bits + GIE);    // Low Power Mode 3 with interrupts enabled

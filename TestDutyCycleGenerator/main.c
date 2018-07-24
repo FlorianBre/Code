@@ -4,11 +4,11 @@
 /**
  * Pinout
  */
-_iq Factor;
 long output;
 double Uout = 1.3565;
 const double Uref = 3.3;
 const double Uoutmax = 2.2;
+const unsigned long factor = 1023;
 _iq dutyCycle;
 double stepSize;
 void setPinOutput(_iq);
@@ -17,8 +17,6 @@ void init();
 void main(void)
 {
     init();
-    Factor = _IQ((1536.0 / Uref) * Uoutmax);
-    init();
     _nop();
     dutyCycle = _IQ(0.5);
     setPinOutput(dutyCycle);
@@ -26,7 +24,7 @@ void main(void)
 }
 
 void setPinOutput(_iq dutyCycle) {
-    //output = _IQmpy(Factor, dutyCycle);
+    //output = _IQmpy(factor, dutyCycle);
     output = 1023;
     P2OUT = output;
     P3OUT = output >> 8;
