@@ -4,7 +4,7 @@
 #include <IQmathLib.h>
 #include <lib/ADC.h>
 const int period = 2400;
-const int wakeUpTime = 1000;
+const int wakeUpTime = 10000;
 const double initDuty  = 0.045;
 unsigned int calculate = 0;
 int count;
