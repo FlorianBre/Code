@@ -15,27 +15,32 @@
 #define T_ADD_B0 TB0CCR6
 #define T_PERIOD_B0 TB0CCR0
 
-void timerInitCounterA0(unsigned int clockSelect, unsigned int countMode){
+void timerInitCounterA0(unsigned int clockSelect, unsigned int countMode, unsigned int countVal){
     TA0CTL = TACLR;
     TA0CTL |= clockSelect |  countMode;
+    TA0CCR0 = countVal;
 }
 
-void timerInitCounterA1(unsigned int clockSelect, unsigned int countMode){
+void timerInitCounterA1(unsigned int clockSelect, unsigned int countMode, unsigned int countVal){
     TA1CTL = TACLR;
     TA1CTL |= clockSelect |  countMode;
+    TA1CCR0 = countVal;
 }
 
-void timerInitCounterA2(unsigned int clockSelect, unsigned int countMode ){
+void timerInitCounterA2(unsigned int clockSelect, unsigned int countMode, unsigned int countVal){
     TA2CTL = TACLR;
     TA2CTL |= clockSelect | countMode;
+    TA2CCR0 = countVal;
 }
-void timerInitCounterA3(unsigned int clockSelect, unsigned int countMode ){
+void timerInitCounterA3(unsigned int clockSelect, unsigned int countMode, unsigned int countVal){
     TA3CTL = TACLR;
     TA3CTL |= clockSelect |  countMode;
+    TA3CCR0 = countVal;
 }
-void timerInitCounterB0(unsigned int clockSelect, unsigned int countMode){
+void timerInitCounterB0(unsigned int clockSelect, unsigned int countMode, unsigned int countVal){
     TB0CTL = TACLR;
     TB0CTL = clockSelect |  countMode ;
+    TB0CCR0 = countVal;
 }
 
 void timerCaptureCompareA0(unsigned int captureCompareInput, unsigned int clockSelect, unsigned int edgeSelect){

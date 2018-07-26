@@ -13,7 +13,7 @@ void adcInitSingle(int clockSelect, int differentialModeSelect, int sampleHoldSe
     ADC12MCTL0 = refSelect | channelSelect | differentialModeSelect ; // Set Upper Reference voltage to internal Ref Voltage, Select Channel
     // One trigger for each conversion.
     // select pulse sample mode, select clock source, select trigger source, select single conversion Mode
-    ADC12CTL1 = ADC12SHP | clockSelect | triggerSelect | ADC12CONSEQ_0;
+    ADC12CTL1 = ADC12SHP | clockSelect | triggerSelect | ADC12CONSEQ_2;
     // Select single channel conversion.
     //ADC12MCTL0 |= refSelect | channelSelect | differentialModeSelect ; // Set Upper Reference voltage to internal Ref Voltage, Select Channel
     if(refSelect == ADC12VRSEL_1) {
@@ -32,7 +32,7 @@ void adcInitSequence(int clockSelect, int differentialModeSelect, int sampleHold
     ADC12CTL0 = sampleHoldSelect | ADC12ON | ADC12MSC;
     // Select SHT, Turn ADC on, Enable ADC
     // select pulse sample mode, select clock source, select trigger source, select sequence of channels mode.
-    ADC12CTL1 = ADC12SHP | clockSelect | triggerSelect | ADC12CONSEQ_1;
+    ADC12CTL1 = ADC12SHP | clockSelect | triggerSelect | ADC12CONSEQ_3;
     int sequenceLength = endChannel - startChannel;
     int i;
     // Initialize the memory controll

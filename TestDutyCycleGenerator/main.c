@@ -3,43 +3,49 @@
 #include <IQmathLib.h>
 /**
  * Pinout
+ * LSB
+ * P2.2
+ * P2.3
+ * P2.4
+ * P2.5
+ * P2.6
+ * P2.7
+ * P8.4
+ * P8.5
+ * P8.6
+ * P8.7
+ * MSB
  */
 long output;
-double Uout = 1.3565;
-const double Uref = 3.3;
-const double Uoutmax = 2.2;
-const unsigned long factor = 1023;
-_iq dutyCycle;
-double stepSize;
-void setPinOutput(_iq);
+const unsigned long factor = 5115;
+double duty;
+void setDutyCycle(double);
 void init();
 
 void main(void)
 {
     init();
     _nop();
-    dutyCycle = _IQ(0.3);
-    setPinOutput(dutyCycle);
+    duty = 0.03;
+    setDutyCycle(duty);
     _nop();
 }
 
-void setPinOutput(_iq dutyCycle) {
-    output = _IQmpy(factor, dutyCycle);
-    P2OUT = output;
-    P3OUT = output >> 8;
+void setDutyCycle(double dutyCycle) {
+    output = _IQmpy(factor, _IQ(dutyCycle));
+    P2OUT |= output << 2;
+    P8OUT = output >> 2;
 }
 
     void init(){
         PM5CTL0 &= ~LOCKLPM5;
         WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
-        P2DIR = 0xFF;
-        P2OUT = 0xFF;
+        P2DIR = 0xFC;
         P2SEL1 = 0x00;
         P2SEL0 = 0x00;
-        P3DIR = 0x03;
-        P3OUT = 0x03;
-        P3SEL1 = 0x00;
-        P3SEL0 = 0x00;
+        P8DIR = 0xF0;
+        P8SEL1 = 0x00;
+        P8SEL0 = 0x00;
     }
 
 

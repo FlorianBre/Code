@@ -5,7 +5,8 @@ void initTimerWakeUp();
 void initPortInterruptWakeUp();
 void lowPowerMode(int);
 void pullDownPorts();
-void outputDirPorts();
+void pullUpPorts();
+void outputHighPorts();
 void init();
 void select1MhzMCLK();
 void select16MhzMCLK();
@@ -15,6 +16,7 @@ void turnRAMOff();
 void turnMPUoff();
 void turnRefOn();
 void activeMulti();
+
 void main(void)
 {
 
@@ -22,74 +24,78 @@ void main(void)
 
 
     // LPM4 Idle
-    //lowPowerMode(3);
+    //lowPowerMode(4);
 
     //LPM4 externer Timer trigger
-    /*
-    lowPowerMode(4);
-    TB0CCR0 = 65530; // Period
-    TB0CTL |= TASSEL_3 | MC_1; // Select timer clock source,Count up to the value in TB0CCR0.
-    */
+    /*TB0CCR0 = 65530; // Period
+    TB0CTL |= TASSEL_3 | MC_2; // Select timer clock source,Count up to the value in TB0CCR0.
+    // Configure Pin as TB0 Trigger
+    P3DIR &= ~BIT3;
+    P3SEL1 = BIT3;
+    P3SEL0 = BIT3;
+    lowPowerMode(4); */
+
 
     // LPM3 Idle VLO
-    //lowPowerMode(3);
-    //selectACLKVlo();
+    selectACLKVlo();
+    lowPowerMode(3);
 
     // LPM3 Idle LFXT
     //lowPowerMode(3);
 
-    // LPM3 Timer Vlo
-    /*lowPowerMode(3);
-    selectACLKVlo();
-    TB0CCR0 = 2; // Period
+    //LPM3 Timer Vlo
+    /*selectACLKVlo();
+    TB0CCR0 = 65530; // Period
     TB0CTL |= TASSEL_1 | MC_1; // Select timer clock source,Count up to the value in TB0CC
-    */
-
-    // LPM3 Timer LFXT
-    /*lowPowerMode(3);
-    TB0CCR0 = 2; // Period
-    TB0CTL |= TASSEL_1 | MC_1; // Select timer clock source,Count up to the value in TB0CC
-    */
+    lowPowerMode(3);*/
+    //
+    /*selectACLKVlo();
+    timerInitPWMB0(2, TASSEL_1, 0.5, OUTMOD_3);
+    lowPowerMode(3); */
 
     // LPM3 Referenzspannung an
-    //lowPowerMode(3);
     //turnRefOn();
+    //lowPowerMode(3);
 
     // Idel 1 Mhz DCO
-    //select1MhzMCLK();
-
+    /*select1MhzMCLK();
+    while(1){
+        _nop();
+    }*/
     // Idel 16 Mhz DCO
-    //select16MhzMCLK();
+    /*select16MhzMCLK();
+    while(1){
+        _nop();
+    }*/
 
     // Multiplication 1 Mhz DCO
-    //select1MhzMCLK();
-    // activeMulti();
+   // select1MhzMCLK();
+   // activeMulti();
 
     // Multiplication 16 Mhz DCO
-    select16MhzMCLK();
-    activeMulti();
+      // select16MhzMCLK();
+      // activeMulti();
 
     // ADC software triggered.
 
-    // ADC ACLK, normal mode, smallest SH time, VCC ref, no internal ref, no interrupt, software trigger.
-    /*adcInitSingle(ADC12SSEL_1, 0, ADC12SHT0_0, ADC12VRSEL_0, 0, ADC12INCH_7, 0, ADC12SHS_0);
-    ADC12CTL0 |= ADC12ENC;
-
+    // All ADC channels, maximal SHtime
+    /*adcInitSequence(ADC12SSEL_1, 0, ADC12SHT0_15, ADC12VRSEL_0, 0, 0, ADC12SHS_0, ADC12INCH_8,  ADC12INCH_14);
+    selectACLKVlo();
+    select16MhzMCLK();
+    ADC12CTL0 &= ~ADC12SC;                 // Clear the start bit.
+    ADC12CTL0 |= ADC12SC | ADC12ENC;       // Start the conversion
+    P9SEL0 = 0xFF;
+    P9SEL1 = 0xFF;
     while(1){
-        ADC12CTL0 &= ~ADC12SC;      // Clear the start bit (precautionary)
-        ADC12CTL0 |= ADC12SC;      // Start the conversion
-    }
-
-
-    //adcInitSequence(ADC12SSEL_1, 0, ADC12SHT0_0, ADC12VRSEL_0, 0, 0, ADC12SHS_0, ADC12INCH_7,  ADC12INCH_8);
-    */
-    //__delay_cycles(500000);
+    __bis_SR_register(LPM3_bits + GIE);
+    } */
 }
 
 void init(){
-    pullDownPorts();
     PM5CTL0 &= ~LOCKLPM5;
     WDTCTL = WDTPW | WDTHOLD; // Stop watchdog timer.
+    pullDownPorts();
+    __enable_interrupt();
 
 
 }
@@ -161,6 +167,66 @@ void pullDownPorts(){
     PJDIR = 0xFF;
 }
 
+void pullUpPorts(){
+    P1DIR = 0x00;
+    P1REN = 0xFF;
+    P1OUT = 0xFF;
+    P2DIR = 0x00;
+    P2REN = 0xFF;
+    P2OUT = 0xFF;
+    P3DIR = 0x00;
+    P3REN = 0xFF;
+    P3OUT = 0xFF;
+    P4DIR = 0x00;
+    P4REN = 0xFF;
+    P4OUT = 0xFF;
+    P5DIR = 0x00;
+    P5REN = 0xFF;
+    P5OUT = 0xFF;
+    P6DIR = 0x00;
+    P6REN = 0xFF;
+    P6OUT = 0xFF;
+    P7DIR = 0x00;
+    P7REN = 0xFF;
+    P7OUT = 0xFF;
+    P8DIR = 0x00;
+    P8REN = 0xFF;
+    P8OUT = 0xFF;
+    P9DIR = 0x00;
+    P9REN = 0xFF;
+    P9OUT = 0xFF;
+    P10DIR = 0x00;
+    P10REN = 0xFF;
+    P10OUT = 0xFF;
+    PJDIR = 0xFF;
+}
+
+
+
+
+
+void outputHighPorts(){
+    P1DIR = 0xFF;
+    P1OUT = 0xFF;
+    P2DIR = 0xFF;
+    P2OUT = 0xFF;
+    P3DIR = 0xFF;
+    P3OUT = 0xFF;
+    P4DIR = 0xFF;
+    P4OUT = 0xFF;
+    P5DIR = 0xFF;
+    P5OUT = 0xFF;
+    P6DIR = 0xFF;
+    P6OUT = 0xFF;
+    P7DIR = 0xFF;
+    P7OUT = 0xFF;
+    P8DIR = 0xFF;
+    P8OUT = 0xFF;
+    P9DIR = 0xFF;
+    P9OUT = 0xFF;
+    P10DIR = 0xFF;
+    P10OUT = 0xFF;
+}
 void turnRefOn(){
     REFCTL0 |= REFON | REFVSEL_2;           // Turn on internal Reference Generator, internal ref = 2 V
     while( REFCTL0 & REFGENBUSY){} // Wait for refernce to settle
@@ -226,26 +292,18 @@ __interrupt void Port_1(void)
 }
 
 
-void outputDirPorts(){
-    P1DIR = 0xFF;
-    P2DIR = 0xFF;
-    P3DIR = 0xFF;
-    P4DIR = 0xFF;
-    P5DIR = 0xFF;
-    P6DIR = 0xFF;
-    P7DIR = 0xFF;
-    P8DIR = 0xFF;
-    P9DIR = 0xFF;
-    P10DIR = 0xFF;
-    P1OUT = 0x00;
-    P2OUT = 0x00;
-    P3OUT = 0x00;
-    P4OUT = 0x00;
-    P5OUT = 0x00;
-    P6OUT = 0x00;
-    P7OUT = 0x00;
-    P8OUT = 0x00;
-    P9OUT = 0x00;
-    P10OUT = 0x00;
-    PJDIR = 0xFF;
+
+
+#if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
+#pragma vector=ADC12_VECTOR
+__interrupt void ADC12ISR (void)
+#elif defined(__GNUC__)
+void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
+#else
+#error Compiler not supported!
+#endif
+{
+    ADC12IFGR0 = 0;
+    ADC12CTL0 &= ~ADC12SC;
+    ADC12CTL0 |= ADC12SC;
 }
