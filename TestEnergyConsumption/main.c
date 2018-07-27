@@ -24,7 +24,7 @@ void main(void)
 
 
     // LPM4 Idle
-    //lowPowerMode(4);
+    lowPowerMode(4);
 
     //LPM4 externer Timer trigger
     /*TB0CCR0 = 65530; // Period
@@ -37,8 +37,8 @@ void main(void)
 
 
     // LPM3 Idle VLO
-    selectACLKVlo();
-    lowPowerMode(3);
+    //selectACLKVlo();
+    //lowPowerMode(3);
 
     // LPM3 Idle LFXT
     //lowPowerMode(3);
