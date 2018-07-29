@@ -110,7 +110,7 @@ void select1MhzMCLK(){
 void select16MhzMCLK(){
     FRCTL0 = FWPW | NWAITS_1; // Defines number of waitstates.
     CSCTL0 = CSKEY;
-    CSCTL1 =  DCORSEL | DCOFSEL_4; // Set DCO to high speed, select  16 MHz
+    CSCTL1 = DCORSEL | DCOFSEL_4; // Set DCO to high speed, select  16 MHz
     CSCTL3 = DIVM_0; // Divide MCLK by 0
 }
 
