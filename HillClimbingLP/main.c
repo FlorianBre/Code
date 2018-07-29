@@ -106,7 +106,7 @@ void init(){
     WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
     // Timer For Waking Up MSP430 for Power Measurement.
 
-    // Pin for duty cycle Generator
+    // Init Pins for duty cycle Generator
     P2DIR = 0xFC;
     P2SEL1 = 0x00;
     P2SEL0 = 0x00;
@@ -115,11 +115,6 @@ void init(){
     P8SEL1 = 0x00;
     P8SEL0 = 0x00;
     P8OUT = 0x00;
-
-    // Configure Pin as TB0 Trigger
-    P3DIR &= ~BIT3;
-    P3SEL1 = BIT3;
-    P3SEL0 = BIT3;
 
     // Timer for measuring Toff
     // clock select SMCLK, select Capture Compare input 0 (P1.5), triggered by rising edge, Interrupt enabled.
@@ -247,7 +242,7 @@ void __attribute__ ((interrupt(ADC12_VECTOR))) ADC12ISR (void)
         P1IFG = 0x00;
         ADC12IFGR0 = 0;
         // Reset SH circuit
-        TB0R = wakeUpTimePower - 10;
+        TB0R = wakeUpTimePower - 2;
         TA0R = 0;
         TA0CCTL2 = CAP | CM_1 | CCIS_0 | SCS | CCIE;
         TA0CTL = TASSEL_2;
@@ -402,7 +397,7 @@ double hillClimbing(){
         if(directionChange > 3){
             currentPower = measuredPower;
             directionChange = 0;
-            stepSize /= 2;
+            stepSize *= 0.5;
         }
     }
     return duty;

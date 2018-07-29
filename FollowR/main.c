@@ -16,7 +16,7 @@ const double initDuty = 0.2;
 const double l = 680.0E-6;
 const double f = 6666.6666;
 const double r = 2000.0;
-// Korrektur Faktor vong wegen Spannungsteiler
+// Correction Factor
 const _iq correctionFactor = _IQ(1.5);
 int test1;
 
