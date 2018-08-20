@@ -41,11 +41,10 @@ double direction;
 long currentPower;
 long measuredPower;
 
-unsigned long power[50];
-unsigned long capDif[50];
-unsigned long uin[50];
-unsigned long timer[50] ;
-double dutyStored[50];
+unsigned long capDif[70];
+unsigned long uin[70];
+unsigned long timer[70] ;
+double dutyMess[70];
 
 int i = 0;
 unsigned long output;
@@ -79,7 +78,7 @@ void main(void)
     __delay_cycles(16000000);
     _nop();
 
-     while(1){
+   /*  while(1){
         delayPowerCalculation();
 
        getPower();
@@ -89,7 +88,7 @@ void main(void)
             _nop();
             _nop();
         }
-    }
+    } */
 
     while(1){
         delayHillClimbing( );
@@ -228,11 +227,11 @@ unsigned long calculatePower() {
     long tmp4 = tmp2 * tmp3;
     long tmp5 = tmp4 * ADC12MEM1;
 
-    power[i] = tmp5;
+    //power[i] = tmp5;
     capDif[i] = ADC12MEM0;
     uin[i] = ADC12MEM1;
     timer[i] = TA0CCR2;
-    dutyStored[i] = duty;
+    dutyMess[i] = duty;
     i ++;
     return tmp5;
 }
@@ -366,8 +365,6 @@ void __attribute__ ((interrupt(TIMER0_A1_VECTOR))) TIMER0_A1_ISR (void)
         TA0CCTL2 = 0;
         // Stop Counter
         TA0CTL = 0;
-        //TB0CCTL5 = OUTMOD_3;
-        // Set flag for starting the calculation of the power.
 
         __bic_SR_register_on_exit(LPM3_bits);
         _nop();

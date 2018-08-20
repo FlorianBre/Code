@@ -44,11 +44,12 @@ void main(void)
     //lowPowerMode(3);
 
     //LPM3 Timer Vlo
-    /*selectACLKVlo();
+   /* selectACLKVlo();
     TB0CCR0 = 65530; // Period
     TB0CTL |= TASSEL_1 | MC_1; // Select timer clock source,Count up to the value in TB0CC
-    lowPowerMode(3);*/
-    //
+    lowPowerMode(3);
+    */
+
     /*selectACLKVlo();
     timerInitPWMB0(2, TASSEL_1, 0.5, OUTMOD_3);
     lowPowerMode(3); */
@@ -61,34 +62,37 @@ void main(void)
     /*select1MhzMCLK();
     while(1){
         _nop();
-    }*/
+    } */
+
     // Idel 16 Mhz DCO
     /*select16MhzMCLK();
     while(1){
         _nop();
-    }*/
+    } */
 
     // Multiplication 1 Mhz DCO
    // select1MhzMCLK();
    // activeMulti();
 
     // Multiplication 16 Mhz DCO
-      // select16MhzMCLK();
-      // activeMulti();
+      //select16MhzMCLK();
+      //activeMulti();
 
     // ADC software triggered.
 
     // All ADC channels, maximal SHtime
-    /*adcInitSequence(ADC12SSEL_1, 0, ADC12SHT0_15, ADC12VRSEL_0, 0, 0, ADC12SHS_0, ADC12INCH_8,  ADC12INCH_14);
-    selectACLKVlo();
+    /*adcInitSequence(ADC12SSEL_3, 0, ADC12SHT0_15, ADC12VRSEL_0, 0, 0, ADC12SHS_0, ADC12INCH_8,  ADC12INCH_14);
+    //selectACLKVlo();
     select16MhzMCLK();
     ADC12CTL0 &= ~ADC12SC;                 // Clear the start bit.
     ADC12CTL0 |= ADC12SC | ADC12ENC;       // Start the conversion
     P9SEL0 = 0xFF;
     P9SEL1 = 0xFF;
     while(1){
+    _nop();
     __bis_SR_register(LPM3_bits + GIE);
-    } */
+    }
+    */
 }
 
 void init(){

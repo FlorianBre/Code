@@ -1,3 +1,6 @@
+/*
+ * Hill Climbing Low Power Version 1
+ */
 #include <msp430.h>
 #define GLOBAL_IQ 20
 #include <lib/Timer.h>
@@ -42,11 +45,10 @@ double direction;
 long currentPower;
 long measuredPower;
 
-unsigned long power[50];
-unsigned long capDif[50];
-unsigned long uin[50];
-unsigned long timer[50] ;
-double dutyStored[50];
+unsigned long capDif[70];
+unsigned long uin[70];
+unsigned long timer[70] ;
+double dutyMess[70];
 
 int i = 0;
 unsigned long output;
@@ -79,7 +81,7 @@ void main(void)
     _nop();
     __delay_cycles(16000000);
     _nop();
-
+    /*
      while(1){
         delayPowerCalculation();
 
@@ -91,12 +93,12 @@ void main(void)
             _nop();
         }
     }
-
-    /*while(1){
+     */
+    while(1){
         delayHillClimbing( );
         hillClimbing();
         _nop();
-    } */
+    }
 }
 
 
@@ -207,11 +209,11 @@ unsigned long calculatePower() {
     long tmp4 = tmp2 * tmp3;
     long tmp5 = tmp4 * ADC12MEM1;
 
-    power[i] = tmp5;
+   // power[i] = tmp5;
     capDif[i] = ADC12MEM0;
     uin[i] = ADC12MEM1;
     timer[i] = TA0CCR2;
-    dutyStored[i] = duty;
+    dutyMess[i] = duty;
     i ++;
     return tmp5;
 }
