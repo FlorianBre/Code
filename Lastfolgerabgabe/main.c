@@ -26,11 +26,11 @@
  * P9.2 input ADC2 Uin.
  */
 
-//--- Type Definition -------------------------------------
+//--- Type Definition ----------------------------------------------------
 
 #define GLOBAL_IQ 18
 
-//---Includes --------------------------------------------------
+//---Includes ------------------------------------------------------------
 
 
 #include <msp430.h>
@@ -38,7 +38,7 @@
 #include <IQmathLib.h>
 #include <lib/ADC.h>
 
-// --- Variables ----------------------------------------------------
+// --- Variables ---------------------------------------------------------
 
 const unsigned int wakeUpTime = 100;
 const unsigned long initDuty = 134086656;
@@ -56,7 +56,7 @@ const unsigned int dutyCycleCorrectionfactor = 46;
 #pragma PERSISTENT ( lut )
 long lut[1024] = {[0 ... 1023] = -1};
 
-//--- Local Functions Declaration -------------------------
+//--- Local Functions Declaration ----------------------------------------
 
 static void init();
 static void calLut(_iq);
@@ -66,7 +66,7 @@ static long calRelation(_iq);
 static void setDutyCycle(long);
 static void pullDownPorts();
 
-//--- Local Functions Definition  -------------------------
+//--- Local Functions Definition  ----------------------------------------
 
 void main(void)
 {
@@ -195,26 +195,6 @@ static void setDutyCycle(long output) {
     P8OUT = output >> 2;
 }
 
-// Timer B0 ISR for waking up MSP after
-#if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
-#pragma vector=TIMER0_B0_VECTOR
-__interrupt void TIMER0_B0_ISR(void)
-#elif defined(__GNUC__)
-void __attribute__ ((interrupt(TIMER0_B0_VECTOR))) TIMER0_B0_ISR (void)
-#else
-#error Compiler not supported!
-#endif
-{
-    switch(__even_in_range(TB0IV,TB0IV_TBIFG))
-    {
-    case TB0IV_NONE:
-        TB0R = 0;
-        __bic_SR_register_on_exit(LPM4_bits);
-        break;                              // TB0CCR0 interrupt
-    default: break;
-    }
-}
-
 /*
  * @brief Method for pulling down every unused pin to reduce energy consumption.
  */
@@ -252,4 +232,26 @@ void pullDownPorts(){
     PJDIR = 0xFF;
 }
 
-// ---EOF--------------------------------------------------
+// --- Interrupt Service Routines Definition -----------------------------
+
+// Timer B0 ISR for waking up MSP after
+#if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
+#pragma vector=TIMER0_B0_VECTOR
+__interrupt void TIMER0_B0_ISR(void)
+#elif defined(__GNUC__)
+void __attribute__ ((interrupt(TIMER0_B0_VECTOR))) TIMER0_B0_ISR (void)
+#else
+#error Compiler not supported!
+#endif
+{
+    switch(__even_in_range(TB0IV,TB0IV_TBIFG))
+    {
+    case TB0IV_NONE:
+        TB0R = 0;
+        __bic_SR_register_on_exit(LPM4_bits);
+        break;                              // TB0CCR0 interrupt
+    default: break;
+    }
+}
+
+// ---EOF-----------------------------------------------------------------
